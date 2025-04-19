@@ -1,18 +1,9 @@
-import {
-  AccountBookOutlined,
-  DashboardOutlined,
-  LogoutOutlined,
-  PieChartOutlined,
-  TransactionOutlined,
-} from '@ant-design/icons';
+import { AccountBookOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { Database } from 'lucide-react';
-import { CreditCard } from 'lucide-react';
-import { LayoutDashboard } from 'lucide-react';
+import { CreditCard, Database, LayoutDashboard } from 'lucide-react';
 import { Outlet } from 'react-router';
 
-const { Header, Content, Sider } = Layout;
-
+const { Content, Sider } = Layout;
 
 const App = () => {
   const menuItems = [
@@ -20,46 +11,48 @@ const App = () => {
       key: '1',
       icon: <LayoutDashboard size={16} />,
       label: 'Dashboard',
-      path: "/dashboard"
+      path: '/dashboard',
     },
     {
       key: '2',
       icon: <Database size={16} />,
       label: 'Datastore',
-      path: "/dashboard"
+      path: '/dashboard',
     },
     {
       key: '3',
       icon: <CreditCard size={16} />,
       label: 'Transactions',
-      path: "/dashboard"
+      path: '/dashboard',
     },
     {
       key: '4',
       icon: <PieChartOutlined />,
       label: 'Reports',
-      path: "/dashboard"
+      path: '/dashboard',
     },
     {
       key: '5',
       icon: <AccountBookOutlined />,
       label: 'Accounts',
-      path: "/dashboard"
+      path: '/dashboard',
     },
   ];
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider style={{ background: '#FFFFFF' }}>
-        <div style={{ height: 64, display: 'flex', alignItems: 'center', paddingLeft: 24 }}>
+        <div
+          style={{
+            height: 64,
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: 24,
+          }}
+        >
           Accounting App
         </div>
-        <Menu
-
-          defaultSelectedKeys={['1']}
-          mode="inline"
-          items={menuItems}
-        />
+        <Menu defaultSelectedKeys={['1']} mode="inline" items={menuItems} />
       </Sider>
 
       <Layout>

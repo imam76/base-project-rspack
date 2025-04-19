@@ -8,5 +8,5 @@ export const useAppStore = create()(
   immer((...a) => ({
     ...createCartSlice(...a),
     ...createUserSlice(...a),
-  }))
+  })),
 );

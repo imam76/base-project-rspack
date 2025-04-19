@@ -1,7 +1,6 @@
 import { StateCreator } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-
 // Initial state
 const initialState = {
   isAuthenticated: false,
@@ -15,7 +14,10 @@ export const createUserSlice = (set) => ({
   login: async (email, password) => {
     try {
       // Simulasi API call
-      const response = await fetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
       const { token, user } = await response.json();
 
       set((state) => {
@@ -39,6 +41,7 @@ export const createUserSlice = (set) => ({
 
   register: async (userData) => {
     // Implementasi registrasi
+    console.log('Registering user HOOKS =>', userData);
   },
 
   updateProfile: (updatedData) => {

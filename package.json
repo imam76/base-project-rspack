@@ -4,17 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rspack build",
-    "lint": "biome check --write",
     "dev": "rspack dev",
+    "lint": "biome check --write",
     "format": "biome format --write",
     "prepare": "husky",
     "preview": "rspack preview"
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "biome check --apply",
-      "biome format --write"
-    ]
   },
   "dependencies": {
     "@ant-design/charts": "^2.2.7",

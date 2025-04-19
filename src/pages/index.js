@@ -19,27 +19,32 @@ const App = () => {
     {
       key: '1',
       icon: <LayoutDashboard size={16} />,
-      label: 'Dashboard'
+      label: 'Dashboard',
+      path: "/dashboard"
     },
     {
       key: '2',
       icon: <Database size={16} />,
-      label: 'Datastore'
+      label: 'Datastore',
+      path: "/dashboard"
     },
     {
       key: '3',
       icon: <CreditCard size={16} />,
-      label: 'Transactions'
+      label: 'Transactions',
+      path: "/dashboard"
     },
     {
       key: '4',
       icon: <PieChartOutlined />,
-      label: 'Reports'
+      label: 'Reports',
+      path: "/dashboard"
     },
     {
       key: '5',
       icon: <AccountBookOutlined />,
-      label: 'Accounts'
+      label: 'Accounts',
+      path: "/dashboard"
     },
   ];
 

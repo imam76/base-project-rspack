@@ -7,7 +7,7 @@
     "lint": "biome check --write",
     "dev": "rspack dev",
     "format": "biome format --write",
-    "prepare": "husky install",
+    "prepare": "husky",
     "preview": "rspack preview"
   },
   "lint-staged": {

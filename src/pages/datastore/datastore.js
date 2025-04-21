@@ -1,5 +1,14 @@
 import { Card, Col, Row, Typography } from 'antd';
-import { Building2, FileText, Package, Settings, ShoppingCart, Tags, User, Users } from 'lucide-react';
+import {
+  Building2,
+  FileText,
+  Package,
+  Settings,
+  ShoppingCart,
+  Tags,
+  User,
+  Users,
+} from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 const { Title } = Typography;
@@ -29,12 +38,12 @@ const Datastore = () => {
               style={{
                 borderRadius: '8px',
                 textAlign: 'center',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
               }}
               onClick={() => navigate(item.path)}
               className="hover:shadow-lg"
             >
-              <div className='flex justify-center items-center p-4'>
+              <div className="flex justify-center items-center p-4">
                 {item.icon}
               </div>
               <Title level={4}>{item.title}</Title>

@@ -12,6 +12,12 @@ const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 
 export default defineConfig({
   context: __dirname,
+  devServer: {
+    port: 3000,
+    open: true,
+    hot: true,
+    historyApiFallback: true,
+  },
   entry: {
     main: './src/main.jsx',
   },

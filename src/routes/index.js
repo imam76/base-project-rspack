@@ -1,17 +1,23 @@
 import App from '@/pages';
 import Dashboard from '@/pages/dashboard/dashboard';
+import NotFound from '@/pages/notfound';
 import { createBrowserRouter } from 'react-router';
 
 const router = createBrowserRouter([
   {
-    Component: App,
+    path: '/',
+    element: <App />,
+    errorElement: <NotFound />,
     children: [
       {
-        path: '/',
+        index: true,
         element: <Dashboard />,
-        errorElement: <div>error</div>,
       },
-    ],
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      }
+    ]
   },
 ]);
 

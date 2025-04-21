@@ -1,43 +1,45 @@
 import { AccountBookOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { CreditCard, Database, LayoutDashboard } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import { Outlet } from 'react-router';
 
 const { Content, Sider } = Layout;
 
 const App = () => {
+  const navigate = useNavigate();
+
   const menuItems = [
     {
-      key: '1',
+      key: '/dashboard',
       icon: <LayoutDashboard size={16} />,
       label: 'Dashboard',
-      path: '/dashboard',
     },
     {
-      key: '2',
+      key: '/datastore',
       icon: <Database size={16} />,
       label: 'Datastore',
-      path: '/dashboard',
     },
     {
-      key: '3',
+      key: '/trasactions',
       icon: <CreditCard size={16} />,
       label: 'Transactions',
-      path: '/dashboard',
     },
     {
-      key: '4',
+      key: '/reports',
       icon: <PieChartOutlined />,
       label: 'Reports',
-      path: '/dashboard',
     },
     {
-      key: '5',
+      key: '/accounts',
       icon: <AccountBookOutlined />,
       label: 'Accounts',
-      path: '/dashboard',
     },
   ];
+
+  const handleClick = ({ key }) => {
+    navigate(key);
+  };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -52,7 +54,12 @@ const App = () => {
         >
           Accounting App
         </div>
-        <Menu defaultSelectedKeys={['1']} mode="inline" items={menuItems} />
+        <Menu
+          onClick={handleClick}
+          defaultSelectedKeys={['1']}
+          mode="inline"
+          items={menuItems}
+        />
       </Sider>
 
       <Layout>

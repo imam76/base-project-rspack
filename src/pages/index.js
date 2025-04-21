@@ -1,6 +1,7 @@
 import { AccountBookOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { CreditCard, Database, LayoutDashboard } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Outlet } from 'react-router';
 
@@ -41,9 +42,25 @@ const App = () => {
     navigate(key);
   };
 
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider style={{ background: '#FFFFFF' }}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+        breakpoint="lg"
+        collapsedWidth="0"
+        style={{
+          background: '#FFFFFF',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          zIndex: 1,
+        }}
+      >
         <div
           style={{
             height: 64,
@@ -52,7 +69,7 @@ const App = () => {
             paddingLeft: 24,
           }}
         >
-          Accounting App
+          {!collapsed && 'Accounting App'}
         </div>
         <Menu
           onClick={handleClick}
@@ -62,16 +79,15 @@ const App = () => {
         />
       </Sider>
 
-      <Layout>
-        {/* <Header style={{ background: '#fff', padding: 0, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 24 }}>
-          <Menu mode="horizontal">
-            <Menu.SubMenu title="John Doe">
-              <Menu.Item key="logout" icon={<LogoutOutlined />}>Logout</Menu.Item>
-            </Menu.SubMenu>
-          </Menu>
-        </Header> */}
-
-        <Content style={{ margin: '24px 16px', padding: 24, borderRadius: 4 }}>
+      <Layout style={{ marginLeft: collapsed ? 0 : 200 }}>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            borderRadius: 4,
+            minHeight: 280,
+          }}
+        >
           <Outlet />
         </Content>
       </Layout>

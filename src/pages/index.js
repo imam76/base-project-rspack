@@ -1,5 +1,7 @@
 import { AccountBookOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
+import { LayoutPanelLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { CreditCard, Database, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -45,13 +47,21 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout hasSider style={{ minHeight: '100vh' }}>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
         breakpoint="lg"
-        collapsedWidth="0"
+        collapsedWidth={0}
+        zeroWidthTriggerStyle={{
+          top: 16,
+          left: collapsed ? 0 : 200,
+          zIndex: 1000,
+          width: 30,
+          height: 20
+        }}
+        trigger={<LayoutSiderTrigger />}
         style={{
           background: '#FFFFFF',
           position: 'fixed',
@@ -94,5 +104,24 @@ const App = () => {
     </Layout>
   );
 };
+
+
+
+const LayoutSiderTrigger = () => {
+  return (
+    <div
+      style={{
+        width: 20,
+        height: 20,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+      }}
+    >
+      <ChevronLeft size={12} />
+    </div>
+  );
+}
 
 export default App;

@@ -1,11 +1,13 @@
 import { AccountBookOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { LayoutPanelLeft } from 'lucide-react';
-import { ChevronLeft } from 'lucide-react';
-import { CreditCard, Database, LayoutDashboard } from 'lucide-react';
+import {
+  ChevronLeft,
+  CreditCard,
+  Database,
+  LayoutDashboard,
+} from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 
 const { Content, Sider } = Layout;
 
@@ -59,7 +61,7 @@ const App = () => {
           left: collapsed ? 0 : 200,
           zIndex: 1000,
           width: 30,
-          height: 20
+          height: 20,
         }}
         trigger={<LayoutSiderTrigger />}
         style={{
@@ -105,8 +107,6 @@ const App = () => {
   );
 };
 
-
-
 const LayoutSiderTrigger = () => {
   return (
     <div
@@ -122,6 +122,6 @@ const LayoutSiderTrigger = () => {
       <ChevronLeft size={12} />
     </div>
   );
-}
+};
 
 export default App;

@@ -15,7 +15,7 @@ export default defineConfig({
   devServer: {
     port: 3000,
     open: true,
-    hot: true,
+    hot: isDev && process.env.RSPACK_SERVE === 'true', // disable HMR saat preview
     historyApiFallback: true,
   },
   entry: {

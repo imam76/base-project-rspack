@@ -6,7 +6,6 @@ import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import { Suspense, lazy } from 'react';
 import { createBrowserRouter } from 'react-router';
 
-
 const router = createBrowserRouter([
   {
     path: '/',
@@ -14,37 +13,43 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: async () => ({ data: "test 123" }),
+        loader: async () => ({ data: 'test 123' }),
         action: async () => {
           console.log('action');
-          return { data: "response update" };
+          return { data: 'response update' };
         },
-        element: ReactLazyWithSuspense(() => import('@/pages/dashboard/dashboard')),
+        element: ReactLazyWithSuspense(
+          () => import('@/pages/dashboard/dashboard'),
+        ),
       },
       {
         path: '/dashboard',
-        loader: async () => ({ data: "test 123" }),
+        loader: async () => ({ data: 'test 123' }),
         action: async () => {
           console.log('action');
-          return { data: "response update" };
+          return { data: 'response update' };
         },
-        element: ReactLazyWithSuspense(() => import('@/pages/dashboard/dashboard')),
+        element: ReactLazyWithSuspense(
+          () => import('@/pages/dashboard/dashboard'),
+        ),
       },
       {
         path: '/datastore',
-        loader: async () => ({ data: "test 123" }),
+        loader: async () => ({ data: 'test 123' }),
         action: async () => {
           console.log('action');
-          return { data: "response update" };
+          return { data: 'response update' };
         },
-        element: ReactLazyWithSuspense(() => import('@/pages/datastore/datastore')),
+        element: ReactLazyWithSuspense(
+          () => import('@/pages/datastore/datastore'),
+        ),
       },
     ],
   },
   {
     path: '*',
     element: <NotFound />,
-  }
+  },
 ]);
 
 export default router;

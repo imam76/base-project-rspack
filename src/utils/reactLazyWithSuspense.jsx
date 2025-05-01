@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy } from 'react';
 
 const ReactLazyWithSuspense = (importFunc) => {
   const LazyComponent = lazy(importFunc);
@@ -8,6 +8,6 @@ const ReactLazyWithSuspense = (importFunc) => {
       <LazyComponent />
     </Suspense>
   );
-}
+};
 
 export default ReactLazyWithSuspense;

@@ -28,7 +28,7 @@ const Datastore = () => {
   ];
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div>
       <Title level={2}>Datastore</Title>
       <Row gutter={[16, 16]}>
         {menuItems.map((item) => (

@@ -46,8 +46,8 @@ export default defineConfig({
             options: {
               jsc: {
                 parser: {
-                  syntax: 'typescript',
-                  tsx: true,
+                  syntax: 'ecmascript',
+                  jsx: true,
                 },
                 transform: {
                   react: {
@@ -78,6 +78,10 @@ export default defineConfig({
       }),
     ],
   },
+  performance: {
+    hints: false,
+  },
+  devtool: isDev ? 'source-map' : false,
   experiments: {
     css: true,
   },

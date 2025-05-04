@@ -11,36 +11,39 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: ReactLazyWithSuspense(() => import("@/pages/dashboard/dashboard")),
+        element: ReactLazyWithSuspense(
+          () => import('@/pages/dashboard/dashboard'),
+        ),
         loader: () => {
-          console.log("INI HANDLE LOADER")
-          return { data: "LOADER TESTED" }
+          console.log('INI HANDLE LOADER');
+          return { data: 'LOADER TESTED' };
         },
         action: () => {
-          console.log("INI HANDLE ACTION")
-          return { data: "RESPONSE 200 ACTION" }
-        }
+          console.log('INI HANDLE ACTION');
+          return { data: 'RESPONSE 200 ACTION' };
+        },
       },
       {
         path: '/dashboard',
-        element: ReactLazyWithSuspense(() => import("@/pages/dashboard/dashboard")),
+        element: ReactLazyWithSuspense(
+          () => import('@/pages/dashboard/dashboard'),
+        ),
         loader: () => {
-          console.log("INI HANDLE LOADER")
-          return { data: "LOADER TESTED" }
+          console.log('INI HANDLE LOADER');
+          return { data: 'LOADER TESTED' };
         },
         action: () => {
-          console.log("INI HANDLE ACTION")
-          return { data: "RESPONSE 200 ACTION" }
-        }
+          console.log('INI HANDLE ACTION');
+          return { data: 'RESPONSE 200 ACTION' };
+        },
       },
-      ...datastore
-    ]
+      ...datastore,
+    ],
   },
   {
     path: '*',
-    element: ReactLazyWithSuspense(() => import('@/pages/notfound'))
-  }
-
+    element: ReactLazyWithSuspense(() => import('@/pages/notfound')),
+  },
 ]);
 
 export default router;

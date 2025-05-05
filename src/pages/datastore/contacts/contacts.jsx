@@ -1,5 +1,5 @@
-import renderTags from "@/utils/renderTags";
-import { Card, Table } from "antd";
+import renderTags from '@/utils/renderTags';
+import { Card, Table } from 'antd';
 
 const dataSource = [
   {
@@ -7,28 +7,28 @@ const dataSource = [
     name: 'Mike',
     age: 32,
     address: '10 Downing Street',
-    tags: 'active'
+    tags: 'active',
   },
   {
     key: '2',
     name: 'John',
     age: 42,
     address: '10 Downing Street',
-    tags: 'pending'
+    tags: 'pending',
   },
   {
     key: '3',
     name: 'Johni',
     age: 44,
     address: '112 Downing Street',
-    tags: 'loser'
+    tags: 'loser',
   },
   {
     key: '3',
     name: 'Johni',
     age: 44,
     address: '112 Downing Street',
-    tags: ['pending', 'loser']
+    tags: ['pending', 'loser'],
   },
 ];
 
@@ -52,7 +52,7 @@ const columns = [
     title: 'Status',
     dataIndex: 'tags',
     key: 'tags',
-    render: (_, tags) => renderTags(_, tags)
+    render: (_, tags) => renderTags(_, tags),
   },
 ];
 
@@ -64,13 +64,13 @@ const Contacts = () => {
           dataSource={dataSource}
           columns={columns}
           pagination={{
-            position: ["bottomLeft"]
+            position: ['bottomLeft'],
           }}
           className="striped-table"
         />
       </Card>
     </div>
-  )
-}
+  );
+};
 
 export default Contacts;

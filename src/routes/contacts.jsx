@@ -26,8 +26,8 @@ const routes = [
         element: ReactLazyWithSuspense(
           async () => await import('@/pages/datastore/datastore'),
         ),
-      }
-    ]
+      },
+    ],
   },
 ];
 

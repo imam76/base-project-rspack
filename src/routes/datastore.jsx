@@ -17,8 +17,8 @@ const routes = [
           async () => await import('@/pages/datastore/datastore'),
         ),
       },
-      ...contacts
-    ]
+      ...contacts,
+    ],
   },
 ];
 

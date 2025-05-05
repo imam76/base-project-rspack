@@ -17,14 +17,46 @@ const Datastore = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { title: 'Contacts', icon: <User size={24} />, path: '/datastore/contacts' },
-    { title: 'Products', icon: <ShoppingCart size={24} />, path: '/datastore/products' },
-    { title: 'Companies', icon: <Building2 size={24} />, path: '/datastore/companies' },
-    { title: 'Suppliers', icon: <Users size={24} />, path: '/datastore/suppliers' },
-    { title: 'Categories', icon: <Tags size={24} />, path: '/datastore/categories' },
-    { title: 'Inventory', icon: <Package size={24} />, path: '/datastore/inventory' },
-    { title: 'Documents', icon: <FileText size={24} />, path: '/datastore/documents' },
-    { title: 'Settings', icon: <Settings size={24} />, path: '/datastore/settings' },
+    {
+      title: 'Contacts',
+      icon: <User size={24} />,
+      path: '/datastore/contacts',
+    },
+    {
+      title: 'Products',
+      icon: <ShoppingCart size={24} />,
+      path: '/datastore/products',
+    },
+    {
+      title: 'Companies',
+      icon: <Building2 size={24} />,
+      path: '/datastore/companies',
+    },
+    {
+      title: 'Suppliers',
+      icon: <Users size={24} />,
+      path: '/datastore/suppliers',
+    },
+    {
+      title: 'Categories',
+      icon: <Tags size={24} />,
+      path: '/datastore/categories',
+    },
+    {
+      title: 'Inventory',
+      icon: <Package size={24} />,
+      path: '/datastore/inventory',
+    },
+    {
+      title: 'Documents',
+      icon: <FileText size={24} />,
+      path: '/datastore/documents',
+    },
+    {
+      title: 'Settings',
+      icon: <Settings size={24} />,
+      path: '/datastore/settings',
+    },
   ];
 
   return (

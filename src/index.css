@@ -7,10 +7,10 @@ body {
   background: #fff;
 }
 
-.striped-table tbody>tr:nth-child(odd) {
+.striped-table tbody > tr:nth-child(odd) {
   background-color: #ffffff;
 }
 
-.striped-table tbody>tr:nth-child(even) {
+.striped-table tbody > tr:nth-child(even) {
   background-color: #f3f3f3;
 }

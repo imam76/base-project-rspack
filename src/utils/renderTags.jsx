@@ -36,11 +36,7 @@ const renderTags = (_, { tags }) => {
         const displayText = label || tag.toUpperCase();
 
         return (
-          <Tag
-            key={`${tag}`}
-            color={color}
-            bordered={false}
-          >
+          <Tag key={`${tag}`} color={color} bordered={false}>
             {displayText}
           </Tag>
         );

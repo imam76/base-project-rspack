@@ -129,13 +129,15 @@ const columns = [
     key: 'x',
     align: 'right',
     width: 50,
-    render: () => <Button
-      variant="text"
-      type='text'
-      shape="circle"
-      icon={<MoreVertical size={12} />}
-      size={'middle'}
-    />,
+    render: () => (
+      <Button
+        variant="text"
+        type="text"
+        shape="circle"
+        icon={<MoreVertical size={12} />}
+        size={'middle'}
+      />
+    ),
   },
 ];
 

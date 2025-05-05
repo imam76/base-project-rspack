@@ -21,7 +21,7 @@
     "postcss-loader": "^8.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.5.0",
+    "react-router": "^7.5.3",
     "recharts": "^2.15.2",
     "tailwindcss": "^4.1.4",
     "zustand": "^5.0.3"

@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: '/dashboard',
+        path: 'dashboard',
         element: ReactLazyWithSuspense(
           () => import('@/pages/dashboard/dashboard'),
         ),

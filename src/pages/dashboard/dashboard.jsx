@@ -228,7 +228,7 @@ const Dashboard = () => {
               </div>
               <p className="text-2xl font-bold text-sky-600">
                 Rp.{' '}
-                {Number(5000000).toLocaleString('id-ID', {
+                {Number(5210000).toLocaleString('id-ID', {
                   minimumFractionDigits: 2,
                 })}
               </p>

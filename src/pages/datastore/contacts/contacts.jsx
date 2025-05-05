@@ -1,5 +1,17 @@
 import renderTags from '@/utils/renderTags';
-import { Card, Table } from 'antd';
+import { Input } from 'antd';
+import {
+  AutoComplete,
+  Breadcrumb,
+  Button,
+  Card,
+  Flex,
+  Space,
+  Table,
+  Typography,
+} from 'antd';
+import { ListFilterIcon } from 'lucide-react';
+import { useState } from 'react';
 
 const dataSource = [
   {
@@ -54,22 +66,129 @@ const columns = [
     key: 'tags',
     render: (_, tags) => renderTags(_, tags),
   },
+  {
+    title: 'Action',
+    dataIndex: '',
+    key: 'x',
+    render: () => <span>Delete</span>,
+  },
 ];
 
+const { Title } = Typography;
+
+const getRandomInt = (max, min = 0) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+const searchResult = (query) =>
+  Array.from({ length: getRandomInt(5) })
+    .join('.')
+    .split('.')
+    .map((_, idx) => {
+      const category = `${query}${idx}`;
+      return {
+        value: category,
+        label: (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span>
+              Found {query} on{' '}
+              <a
+                href={`https://s.taobao.com/search?q=${query}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {category}
+              </a>
+            </span>
+            <span>{getRandomInt(200, 100)} results</span>
+          </div>
+        ),
+      };
+    });
+
 const Contacts = () => {
+  const [options, setOptions] = useState([]);
+  const handleSearch = (value) => {
+    setOptions(value ? searchResult(value) : []);
+  };
+  const onSelect = (value) => {
+    console.log('onSelect', value);
+  };
+
   return (
-    <div>
-      <Card>
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          pagination={{
-            position: ['bottomLeft'],
-          }}
-          className="striped-table"
+    <Flex gap={'large'} vertical>
+      <Flex justify="space-between" align="center">
+        <Breadcrumb
+          separator=">"
+          items={[
+            {
+              title: 'Home',
+            },
+            {
+              title: 'Application Center',
+              href: '',
+            },
+            {
+              title: 'Application List',
+              href: '',
+            },
+            {
+              title: 'An Application',
+            },
+          ]}
         />
+        <AutoComplete
+          popupMatchSelectWidth={252}
+          style={{ width: 300 }}
+          options={options}
+          onSelect={onSelect}
+          onSearch={handleSearch}
+          size="large"
+        >
+          <Input.Search
+            size="large"
+            placeholder="Search"
+            color="primary"
+            enterButton
+          />
+        </AutoComplete>
+      </Flex>
+      <Card>
+        <Space size={'small'} direction="vertical" style={{ display: 'flex' }}>
+          <Flex justify="space-between">
+            <Space size={'small'}>
+              <Title level={2}>Contacts</Title>
+              <Title level={3} type="secondary" strong>
+                4
+              </Title>
+            </Space>
+            <Space size={'small'}>
+              <Button
+                variant="outlined"
+                color="primary"
+                shape="default"
+                icon={<ListFilterIcon size={12} />}
+                size={'middle'}
+              />
+              <Button variant="solid" color="primary">
+                Create
+              </Button>
+            </Space>
+          </Flex>
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={{
+              position: ['bottomLeft'],
+            }}
+            className="striped-table"
+          />
+        </Space>
       </Card>
-    </div>
+    </Flex>
   );
 };
 

@@ -10,8 +10,28 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { createStyles } from 'antd-style';
+import { MoreVertical } from 'lucide-react';
 import { ListFilterIcon } from 'lucide-react';
 import { useState } from 'react';
+
+const useStyle = createStyles(({ css, token }) => {
+  const { antCls } = token;
+  return {
+    customTable: css`
+      ${antCls}-table {
+        ${antCls}-table-container {
+          ${antCls}-table-body,
+          ${antCls}-table-content {
+            scrollbar-width: thin;
+            scrollbar-color: #eaeaea transparent;
+            scrollbar-gutter: stable;
+          }
+        }
+      }
+    `,
+  };
+});
 
 const dataSource = [
   {
@@ -36,7 +56,42 @@ const dataSource = [
     tags: 'loser',
   },
   {
-    key: '3',
+    key: '23',
+    name: 'Johni',
+    age: 44,
+    address: '112 Downing Street',
+    tags: ['pending', 'loser'],
+  },
+  {
+    key: '13',
+    name: 'Johni',
+    age: 44,
+    address: '112 Downing Street',
+    tags: ['pending', 'loser'],
+  },
+  {
+    key: '33',
+    name: 'Johni',
+    age: 44,
+    address: '112 Downing Street',
+    tags: ['pending', 'loser'],
+  },
+  {
+    key: '33',
+    name: 'Johni',
+    age: 44,
+    address: '112 Downing Street',
+    tags: ['pending', 'loser'],
+  },
+  {
+    key: '213',
+    name: 'Johni',
+    age: 44,
+    address: '112 Downing Street',
+    tags: ['pending', 'loser'],
+  },
+  {
+    key: '323',
     name: 'Johni',
     age: 44,
     address: '112 Downing Street',
@@ -64,13 +119,23 @@ const columns = [
     title: 'Status',
     dataIndex: 'tags',
     key: 'tags',
+    width: 200,
+    justify: 'center',
     render: (_, tags) => renderTags(_, tags),
   },
   {
-    title: 'Action',
+    title: '',
     dataIndex: '',
     key: 'x',
-    render: () => <span>Delete</span>,
+    align: 'right',
+    width: 50,
+    render: () => <Button
+      variant="text"
+      type='text'
+      shape="circle"
+      icon={<MoreVertical size={12} />}
+      size={'middle'}
+    />,
   },
 ];
 
@@ -110,6 +175,7 @@ const searchResult = (query) =>
     });
 
 const Contacts = () => {
+  const { styles } = useStyle();
   const [options, setOptions] = useState([]);
   const handleSearch = (value) => {
     setOptions(value ? searchResult(value) : []);
@@ -179,12 +245,14 @@ const Contacts = () => {
             </Space>
           </Flex>
           <Table
+            className={`${styles.customTable} striped-table`}
             dataSource={dataSource}
             columns={columns}
+            scroll={{ y: 110 * 5 }}
             pagination={{
+              pageSize: 50,
               position: ['bottomLeft'],
             }}
-            className="striped-table"
           />
         </Space>
       </Card>

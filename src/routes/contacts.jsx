@@ -17,14 +17,14 @@ const routes = [
         ),
       },
       {
-        path: 'add',
+        path: 'create',
         loader: async () => ({ data: 'test 123' }),
         action: async () => {
           console.log('action');
           return { data: 'response update' };
         },
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastore/datastore'),
+          async () => await import('@/pages/datastore/contacts/create-contact'),
         ),
       },
     ],

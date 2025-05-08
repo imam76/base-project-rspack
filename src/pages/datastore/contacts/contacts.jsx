@@ -1,3 +1,5 @@
+import navigateToChildRoute from '@/utils/navigateToChild';
+import pushToChildrenRoute from '@/utils/navigateToChild';
 import renderTags from '@/utils/renderTags';
 import { Input } from 'antd';
 import {
@@ -12,6 +14,8 @@ import {
 } from 'antd';
 import { createStyles } from 'antd-style';
 import { MoreVertical } from 'lucide-react';
+import { LucideDownload } from 'lucide-react';
+import { CloudDownload } from 'lucide-react';
 import { ListFilterIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -67,7 +71,7 @@ const dataSource = [
     name: 'Johni',
     age: 44,
     address: '112 Downing Street',
-    tags: ['pending', 'loser'],
+    tags: ['active', 'loser'],
   },
   {
     key: '33',
@@ -81,7 +85,7 @@ const dataSource = [
     name: 'Johni',
     age: 44,
     address: '112 Downing Street',
-    tags: ['pending', 'loser'],
+    tags: ['pending', 'active'],
   },
   {
     key: '213',
@@ -104,11 +108,13 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
+    width: 200,
   },
   {
     title: 'Age',
     dataIndex: 'age',
     key: 'age',
+    width: 100,
   },
   {
     title: 'Address',
@@ -179,9 +185,11 @@ const searchResult = (query) =>
 const Contacts = () => {
   const { styles } = useStyle();
   const [options, setOptions] = useState([]);
+  const navigateToChild = navigateToChildRoute();
   const handleSearch = (value) => {
     setOptions(value ? searchResult(value) : []);
   };
+
   const onSelect = (value) => {
     console.log('onSelect', value);
   };
@@ -241,7 +249,15 @@ const Contacts = () => {
                 icon={<ListFilterIcon size={12} />}
                 size={'middle'}
               />
-              <Button variant="solid" color="primary">
+              <Button variant="outlined" color="primary">
+                <LucideDownload size={16} />
+                Export to CSV
+              </Button>
+              <Button
+                variant="solid"
+                color="primary"
+                onClick={() => navigateToChild({ childrenPath: 'create' })}
+              >
                 Create
               </Button>
             </Space>

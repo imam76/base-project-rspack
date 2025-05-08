@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "VERCEL_ENV: $VERCEL_ENV"
+echo "VERCEL_GIT_BRANCH: $VERCEL_GIT_BRANCH"
 
-if [[ "$VERCEL_ENV" == "main" || "$VERCEL_ENV" == "staging" ]] ; then 
+if [[ "$VERCEL_GIT_BRANCH" == "main" || "$VERCEL_GIT_BRANCH" == "staging" ]] ; then 
   # Proceed with the build
   echo "✅ - Build can proceed"
   exit 1

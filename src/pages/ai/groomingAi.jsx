@@ -25,7 +25,8 @@ const ChatPage = () => {
   useEffect(() => {
     // Scroll ke bagian bawah setiap kali ada pesan baru
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, []);
 
@@ -37,7 +38,10 @@ const ChatPage = () => {
 
       // Simulasi respons dari AI setelah beberapa detik
       setTimeout(() => {
-        const aiResponse = { text: `Ini adalah respons dari AI untuk pesan "${inputValue}"`, sender: 'ai' };
+        const aiResponse = {
+          text: `Ini adalah respons dari AI untuk pesan "${inputValue}"`,
+          sender: 'ai',
+        };
         setMessages((prevMessages) => [...prevMessages, aiResponse]);
       }, 1000); // Simulasi delay 1 detik
     }
@@ -76,7 +80,6 @@ const ChatPage = () => {
             },
           ]}
         />
-
       </Flex>
       <Card>
         <Space size={'small'} direction="vertical" style={{ display: 'flex' }}>
@@ -91,11 +94,14 @@ const ChatPage = () => {
                   gap={12}
                 >
                   {/* Avatar hanya ditampilkan di sisi AI untuk contoh ini */}
-                  {msg.sender === 'ai' && <Avatar icon={<Brain />} size="small" />}
+                  {msg.sender === 'ai' && (
+                    <Avatar icon={<Brain />} size="small" />
+                  )}
                   <div
                     style={{
                       background: msg.sender === 'user' ? '#1890ff' : '#f0f0f0',
-                      color: msg.sender === 'user' ? 'white' : 'rgba(0, 0, 0, 0.85)',
+                      color:
+                        msg.sender === 'user' ? 'white' : 'rgba(0, 0, 0, 0.85)',
                       padding: '10px 16px',
                       borderRadius: '8px',
                       maxWidth: '70%',
@@ -105,14 +111,18 @@ const ChatPage = () => {
                     {msg.text}
                   </div>
                   {/* Avatar user ditampilkan di sisi kanan pesan user */}
-                  {msg.sender === 'user' && <Avatar icon={<User />} size="small" />}
+                  {msg.sender === 'user' && (
+                    <Avatar icon={<User />} size="small" />
+                  )}
                 </Flex>
               ))}
             </div>
 
             {/* Area Input Pesan */}
             <div style={inputAreaStyle}>
-              <Flex gap={12}> {/* Gunakan Flex untuk menata input dan tombol */}
+              <Flex gap={12}>
+                {' '}
+                {/* Gunakan Flex untuk menata input dan tombol */}
                 <Input
                   placeholder="Ketik pesan..."
                   value={inputValue}
@@ -120,7 +130,11 @@ const ChatPage = () => {
                   onKeyDown={handleKeyDown}
                   style={{ flex: 1 }} // Input mengisi ruang yang tersedia
                 />
-                <Button type="primary" icon={<Send size={16} />} onClick={handleSendMessage}>
+                <Button
+                  type="primary"
+                  icon={<Send size={16} />}
+                  onClick={handleSendMessage}
+                >
                   Kirim
                 </Button>
               </Flex>

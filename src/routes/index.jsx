@@ -39,9 +39,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'ai',
-        element: ReactLazyWithSuspense(
-          () => import('@/pages/ai/groomingAi'),
-        ),
+        element: ReactLazyWithSuspense(() => import('@/pages/ai/groomingAi')),
         loader: () => {
           console.log('INI HANDLE LOADER');
           return { data: 'LOADER TESTED' };

@@ -1,5 +1,6 @@
 import { AccountBookOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
+import { BrainIcon } from 'lucide-react';
 import {
   ChevronLeft,
   CreditCard,
@@ -11,7 +12,7 @@ import { Outlet, useNavigate } from 'react-router';
 
 const { Content, Sider } = Layout;
 
-const App = () => {
+const AppLayout = () => {
   const navigate = useNavigate();
 
   const menuItems = [
@@ -39,6 +40,11 @@ const App = () => {
       key: '/accounts',
       icon: <AccountBookOutlined />,
       label: 'Accounts',
+    },
+    {
+      key: '/ai',
+      icon: <BrainIcon size={16} />,
+      label: 'Grooming Ai',
     },
   ];
 
@@ -124,4 +130,4 @@ const LayoutSiderTrigger = () => {
   );
 };
 
-export default App;
+export default AppLayout;

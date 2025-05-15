@@ -1,5 +1,18 @@
-import { ProForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { Breadcrumb, Card, Checkbox, Col, Flex, Row, Space, Typography } from 'antd';
+import {
+  ProForm,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
+import {
+  Breadcrumb,
+  Card,
+  Checkbox,
+  Col,
+  Flex,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ContactFormSchema } from '@/schema';
@@ -9,11 +22,11 @@ import { useNavigate } from 'react-router';
 
 const { Title, Text } = Typography;
 
-const optionsWithDisabled = [
-  { label: 'Apple', value: 'Apple', className: 'label-1' },
-  { label: 'Pear', value: 'Pear', className: 'label-2' },
-  { label: 'Orange', value: 'Orange', className: 'label-3', disabled: false },
-];
+// const optionsWithDisabled = [
+//   { label: 'Apple', value: 'Apple', className: 'label-1' },
+//   { label: 'Pear', value: 'Pear', className: 'label-2' },
+//   { label: 'Orange', value: 'Orange', className: 'label-3', disabled: false },
+// ];
 
 const CreateContact = () => {
   const navigate = useNavigate();
@@ -34,9 +47,9 @@ const CreateContact = () => {
     },
   });
 
-  const onChange = checkedValues => {
-    console.log('checked = ', checkedValues);
-  };
+  // const onChange = checkedValues => {
+  //   console.log('checked = ', checkedValues);
+  // };
 
   const onSubmit = (data) => console.log(data);
   console.log('INII ERROR =>', errors);
@@ -186,50 +199,34 @@ const CreateContact = () => {
               />
             </Col>
             <Col xs={24} md={24} lg={12}>
-              <div className='mb-16'>
+              <div className="mb-16">
                 <Space size={'small'}>
                   <Controller
-                    name='is_customer'
+                    name="is_customer"
                     control={control}
                     render={(form) => (
-                      <Checkbox
-                        {...form.field}
-                      >
-                        Customer
-                      </Checkbox>
+                      <Checkbox {...form.field}>Customer</Checkbox>
                     )}
                   />
                   <Controller
-                    name='is_supplier'
+                    name="is_supplier"
                     control={control}
                     render={(form) => (
-                      <Checkbox
-                        {...form.field}
-                      >
-                        Supplier
-                      </Checkbox>
+                      <Checkbox {...form.field}>Supplier</Checkbox>
                     )}
                   />
                   <Controller
-                    name='is_employee'
+                    name="is_employee"
                     control={control}
                     render={(form) => (
-                      <Checkbox
-                        {...form.field}
-                      >
-                        Employee
-                      </Checkbox>
+                      <Checkbox {...form.field}>Employee</Checkbox>
                     )}
                   />
                   <Controller
-                    name='is_salesman'
+                    name="is_salesman"
                     control={control}
                     render={(form) => (
-                      <Checkbox
-                        {...form.field}
-                      >
-                        Salesman
-                      </Checkbox>
+                      <Checkbox {...form.field}>Salesman</Checkbox>
                     )}
                   />
                 </Space>

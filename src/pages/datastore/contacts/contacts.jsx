@@ -1,23 +1,19 @@
+import { useDataQuery } from '@/utils/hooks/useDataQuery';
+import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
 import navigateToChildRoute from '@/utils/navigateToChild';
-import pushToChildrenRoute from '@/utils/navigateToChild';
 import renderTags from '@/utils/renderTags';
-import { Input } from 'antd';
 import {
-  AutoComplete,
   Breadcrumb,
   Button,
   Card,
   Flex,
+  Input,
   Space,
   Table,
   Typography,
 } from 'antd';
 import { createStyles } from 'antd-style';
-import { MoreVertical } from 'lucide-react';
-import { LucideDownload } from 'lucide-react';
-import { CloudDownload } from 'lucide-react';
-import { ListFilterIcon } from 'lucide-react';
-import { useState } from 'react';
+import { ListFilterIcon, LucideDownload, MoreVertical } from 'lucide-react';
 
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
@@ -37,72 +33,6 @@ const useStyle = createStyles(({ css, token }) => {
   };
 });
 
-const dataSource = [
-  {
-    key: '1',
-    name: 'Mike',
-    age: 32,
-    address: '10 Downing Street',
-    tags: 'active',
-  },
-  {
-    key: '2',
-    name: 'John',
-    age: 42,
-    address: '10 Downing Street',
-    tags: 'pending',
-  },
-  {
-    key: '3',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: 'loser',
-  },
-  {
-    key: '23',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: ['pending', 'loser'],
-  },
-  {
-    key: '13',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: ['active', 'loser'],
-  },
-  {
-    key: '33',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: ['pending', 'loser'],
-  },
-  {
-    key: '33',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: ['pending', 'active'],
-  },
-  {
-    key: '213',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: ['pending', 'loser'],
-  },
-  {
-    key: '323',
-    name: 'Johni',
-    age: 44,
-    address: '112 Downing Street',
-    tags: ['pending', 'loser'],
-  },
-];
-
 const columns = [
   {
     title: 'Name',
@@ -111,23 +41,23 @@ const columns = [
     width: 200,
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: 'Code',
+    dataIndex: 'code',
+    key: 'code',
     width: 100,
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
   },
   {
     title: 'Status',
-    dataIndex: 'tags',
-    key: 'tags',
+    dataIndex: 'is_active',
+    key: 'is_active',
     width: 200,
     justify: 'center',
-    render: (_, tags) => renderTags(_, tags),
+    render: (_, is_active) => renderTags(_, is_active),
   },
   {
     title: '',
@@ -148,51 +78,28 @@ const columns = [
 ];
 
 const { Title } = Typography;
-
-const getRandomInt = (max, min = 0) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
-const searchResult = (query) =>
-  Array.from({ length: getRandomInt(5) })
-    .join('.')
-    .split('.')
-    .map((_, idx) => {
-      const category = `${query}${idx}`;
-      return {
-        value: category,
-        label: (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span>
-              Found {query} on{' '}
-              <a
-                href={`https://s.taobao.com/search?q=${query}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {category}
-              </a>
-            </span>
-            <span>{getRandomInt(200, 100)} results</span>
-          </div>
-        ),
-      };
-    });
+const { Search } = Input;
 
 const Contacts = () => {
   const { styles } = useStyle();
-  const [options, setOptions] = useState([]);
   const navigateToChild = navigateToChildRoute();
-  const handleSearch = (value) => {
-    setOptions(value ? searchResult(value) : []);
+  const updateParam = useDebouncedSearchParams(800); // bisa ganti delay
+  const endpoints = '/api/v2/contacts';
+
+  const { initialData, isLoading } = useDataQuery({
+    queryKey: ['contacts'],
+    getUrl: endpoints,
+    filters: {
+      per_page: 10,
+      page: 1,
+    },
+  });
+
+  const handleSearch = (e) => {
+    updateParam('search', e.target.value);
   };
 
-  const onSelect = (value) => {
-    console.log('onSelect', value);
-  };
+  console.log('INIII PROPS CONTACT =>', isLoading, initialData);
 
   return (
     <Flex gap={'large'} vertical>
@@ -216,21 +123,16 @@ const Contacts = () => {
             },
           ]}
         />
-        <AutoComplete
-          popupMatchSelectWidth={252}
-          style={{ width: 300 }}
-          options={options}
-          onSelect={onSelect}
-          onSearch={handleSearch}
+        <Search
           size="large"
-        >
-          <Input.Search
-            size="large"
-            placeholder="Search"
-            color="primary"
-            enterButton
-          />
-        </AutoComplete>
+          placeholder="Search"
+          color="primary"
+          onChange={handleSearch}
+          style={{
+            width: 300,
+          }}
+          enterButton
+        />
       </Flex>
       <Card>
         <Space size={'small'} direction="vertical" style={{ display: 'flex' }}>
@@ -238,7 +140,7 @@ const Contacts = () => {
             <Space size={'small'}>
               <Title level={2}>Contacts</Title>
               <Title level={3} type="secondary" strong>
-                4
+                {initialData?.count}
               </Title>
             </Space>
             <Space size={'small'}>
@@ -264,7 +166,8 @@ const Contacts = () => {
           </Flex>
           <Table
             className={`${styles.customTable} striped-table`}
-            dataSource={dataSource}
+            dataSource={initialData?.results ?? []}
+            rowKey={'id'}
             columns={columns}
             scroll={{ y: 110 * 5 }}
             pagination={{

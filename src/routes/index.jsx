@@ -14,40 +14,16 @@ const router = createBrowserRouter([
         element: ReactLazyWithSuspense(
           () => import('@/pages/dashboard/dashboard'),
         ),
-        loader: () => {
-          console.log('INI HANDLE LOADER');
-          return { data: 'LOADER TESTED' };
-        },
-        action: () => {
-          console.log('INI HANDLE ACTION');
-          return { data: 'RESPONSE 200 ACTION' };
-        },
       },
       {
         path: 'dashboard',
         element: ReactLazyWithSuspense(
           () => import('@/pages/dashboard/dashboard'),
         ),
-        loader: () => {
-          console.log('INI HANDLE LOADER');
-          return { data: 'LOADER TESTED' };
-        },
-        action: () => {
-          console.log('INI HANDLE ACTION');
-          return { data: 'RESPONSE 200 ACTION' };
-        },
       },
       {
         path: 'ai',
         element: ReactLazyWithSuspense(() => import('@/pages/ai/groomingAi')),
-        loader: () => {
-          console.log('INI HANDLE LOADER');
-          return { data: 'LOADER TESTED' };
-        },
-        action: () => {
-          console.log('INI HANDLE ACTION');
-          return { data: 'RESPONSE 200 ACTION' };
-        },
       },
       ...datastore,
     ],

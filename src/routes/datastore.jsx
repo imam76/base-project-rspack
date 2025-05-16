@@ -8,11 +8,6 @@ const routes = [
     children: [
       {
         index: true,
-        loader: async () => ({ data: 'test 123' }),
-        action: async () => {
-          console.log('action');
-          return { data: 'response update' };
-        },
         element: ReactLazyWithSuspense(
           async () => await import('@/pages/datastore/datastore'),
         ),

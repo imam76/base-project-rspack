@@ -1,3 +1,4 @@
+import Api from '@/utils/axios/api';
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 
 /** @type {import('react-router').RouteObject[]} */
@@ -7,22 +8,12 @@ const routes = [
     children: [
       {
         index: true,
-        loader: async () => ({ data: 'test 123' }),
-        action: async () => {
-          console.log('action');
-          return { data: 'response update' };
-        },
         element: ReactLazyWithSuspense(
           async () => await import('@/pages/datastore/contacts/contacts'),
         ),
       },
       {
         path: 'create',
-        loader: async () => ({ data: 'test 123' }),
-        action: async () => {
-          console.log('action');
-          return { data: 'response update' };
-        },
         element: ReactLazyWithSuspense(
           async () => await import('@/pages/datastore/contacts/create-contact'),
         ),

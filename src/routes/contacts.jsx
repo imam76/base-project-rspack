@@ -18,6 +18,12 @@ const routes = [
           async () => await import('@/pages/datastore/contacts/create-contact'),
         ),
       },
+      {
+        path: 'edit/:id',
+        element: ReactLazyWithSuspense(
+          async () => await import('@/pages/datastore/contacts/edit-contact'),
+        ),
+      },
     ],
   },
 ];

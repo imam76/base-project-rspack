@@ -3,7 +3,7 @@ import axios from 'axios';
 const Api = () => {
   return axios.create({
     headers: {
-      Authorization: 'Bearer ZGYxNjBiNjItZmRlNi0zOTlkLTlhY2YtODg3MDY3MWM2OTZi',
+      Authorization: 'Bearer MGRlN2M5ZTgtZTNkNS0zYzM0LWExMDctMjJjZGNhODNmODA0',
       slug: 'data2025250501082045-pg.zahironline.com',
     },
   });

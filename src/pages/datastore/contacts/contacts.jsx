@@ -1,7 +1,7 @@
+import ContextMenuOption from '@/blocs/ContextMenuOption';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
 import navigateToChildRoute from '@/utils/navigateToChild';
-import renderTags from '@/utils/renderTags';
 import {
   Breadcrumb,
   Button,
@@ -13,8 +13,16 @@ import {
   Typography,
 } from 'antd';
 import { createStyles } from 'antd-style';
-import { ListFilterIcon, LucideDownload, MoreVertical } from 'lucide-react';
+import {
+  ListFilterIcon,
+  LucideDownload,
+  MoreVertical,
+  RefreshCcw,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
+// styles variables
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
   return {
@@ -33,6 +41,25 @@ const useStyle = createStyles(({ css, token }) => {
   };
 });
 
+//default variables
+const DEFAULT_PER_PAGE = 10;
+const DEFAULT_PAGE = 1;
+const DEFAULT_FILTERS = {
+  per_page: DEFAULT_PER_PAGE,
+  page: DEFAULT_PAGE,
+  includes: [
+    'emails',
+    'phones',
+    'other_fields',
+    'addresses',
+    'contact_persons',
+    'restricted_departments',
+    'restricted_contacts',
+    'bank_accounts',
+  ],
+};
+
+// setting table columns
 const columns = [
   {
     title: 'Name',
@@ -48,78 +75,116 @@ const columns = [
   },
   {
     title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
+    render: (column) => column?.emails?.[0]?.value ?? '-',
   },
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    key: 'is_active',
-    width: 200,
-    justify: 'center',
-    render: (_, is_active) => renderTags(_, is_active),
-  },
+  // {
+  //   title: 'Status',
+  //   dataIndex: 'is_active',
+  //   key: 'is_active',
+  //   width: 200,
+  //   justify: 'center',
+  //   render: (_, record) => {
+  //     const status = record.is_active ? 'active' : 'inactive';
+  //     return renderTags(_, { tags: [status] });
+  //   },
+  // },
   {
     title: '',
     dataIndex: '',
     key: 'x',
     align: 'right',
     width: 50,
-    render: () => (
-      <Button
-        variant="text"
-        type="text"
-        shape="circle"
-        icon={<MoreVertical size={12} />}
-        size={'middle'}
-      />
+    render: (_, record) => (
+      <ContextMenuOption
+        editPath={`/edit/${record.id}`}
+        detailPath={`/detail/${record.id}`}
+        deletePath={`/delete/${record.id}`}
+      >
+        <Button
+          variant="text"
+          type="text"
+          shape="circle"
+          icon={<MoreVertical size={12} />}
+          size={'middle'}
+        />
+      </ContextMenuOption>
     ),
   },
 ];
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Search } = Input;
 
+const TitleTableRender = ({ selectedLength }) => {
+  if (selectedLength === 0) {
+    return null;
+  }
+  return (
+    <Space size={'small'}>
+      <Text color="primary">Total Selected Items</Text>
+      <Text color="primary">{selectedLength}</Text>
+    </Space>
+  );
+};
+
+// main  component
 const Contacts = () => {
   const { styles } = useStyle();
+  const navigate = useNavigate();
   const navigateToChild = navigateToChildRoute();
-  const updateParam = useDebouncedSearchParams(800); // bisa ganti delay
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const { searchParam, updateParam } = useDebouncedSearchParams(800); // bisa ganti delay
+  const [selectedRow, setSelectedRow] = useState([]);
+
+  const searchValue = searchParam.get('search') ?? '';
   const endpoints = '/api/v2/contacts';
 
-  const { initialData, isLoading } = useDataQuery({
+  const { initialData, isLoading, refetch, setFilters } = useDataQuery({
     queryKey: ['contacts'],
     getUrl: endpoints,
-    filters: {
-      per_page: 10,
-      page: 1,
-    },
+    filters: DEFAULT_FILTERS,
   });
+
+  // Update filters when search changes
+  useEffect(() => {
+    setFilters({
+      per_page: perPage,
+      'search[name,code]': searchValue,
+    });
+  }, [searchValue, setFilters, perPage]);
 
   const handleSearch = (e) => {
     updateParam('search', e.target.value);
   };
 
-  console.log('INIII PROPS CONTACT =>', isLoading, initialData);
+  const onShowSizeChange = (_, perPage) => {
+    // console.log("INIII ONSHOW SIZE CHANGE =>", _, perPage);
+    setPerPage(perPage);
+  };
+
+  const handleSelectRow = (selectedRowKeys, selectedRows) => {
+    console.log('selectedRowKeys =>', selectedRowKeys);
+    console.log('selectedRows =>', selectedRows);
+    setSelectedRow(selectedRowKeys);
+  };
+
+  console.log('INIII PROPS CONTACT =>', isLoading, initialData, selectedRow);
 
   return (
     <Flex gap={'large'} vertical>
       <Flex justify="space-between" align="center">
         <Breadcrumb
           separator=">"
+          style={{
+            cursor: 'pointer',
+          }}
           items={[
             {
-              title: 'Home',
+              title: 'Datastore',
+              onClick: () => navigate('/datastore'),
             },
             {
-              title: 'Application Center',
-              href: '',
-            },
-            {
-              title: 'Application List',
-              href: '',
-            },
-            {
-              title: 'An Application',
+              title: 'Contacts',
             },
           ]}
         />
@@ -148,6 +213,14 @@ const Contacts = () => {
                 variant="outlined"
                 color="primary"
                 shape="default"
+                icon={<RefreshCcw size={12} />}
+                size={'middle'}
+                onClick={refetch}
+              />
+              <Button
+                variant="outlined"
+                color="primary"
+                shape="default"
                 icon={<ListFilterIcon size={12} />}
                 size={'middle'}
               />
@@ -165,13 +238,24 @@ const Contacts = () => {
             </Space>
           </Flex>
           <Table
+            size="small"
+            loading={isLoading}
             className={`${styles.customTable} striped-table`}
             dataSource={initialData?.results ?? []}
             rowKey={'id'}
+            rowSelection={{
+              type: 'checkbox',
+              onChange: handleSelectRow,
+            }}
             columns={columns}
-            scroll={{ y: 110 * 5 }}
+            title={() =>
+              TitleTableRender({ selectedLength: selectedRow.length })
+            }
             pagination={{
-              pageSize: 50,
+              showSizeChanger: true,
+              onShowSizeChange: onShowSizeChange,
+              pageSize: perPage,
+              total: initialData?.per_page,
               position: ['bottomLeft'],
             }}
           />

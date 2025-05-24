@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 
 export function useDebouncedSearchParams(delay = 500) {
-  const [_, setSearchParams] = useSearchParams();
+  const [searchParam, setSearchParams] = useSearchParams();
 
   const debouncedUpdate = useMemo(() => {
     return lodash.debounce((paramName, value) => {
@@ -30,5 +30,5 @@ export function useDebouncedSearchParams(delay = 500) {
     debouncedUpdate(paramName, value);
   };
 
-  return updateParam;
+  return { searchParam, updateParam };
 }

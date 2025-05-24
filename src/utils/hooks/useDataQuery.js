@@ -9,32 +9,41 @@ import Api from '../axios/api';
  * @returns {string} URL with query parameters
  */
 function buildUrl(baseUrl, params) {
-  if (!params || Object.keys(params).length === 0) {
-    return baseUrl;
-  }
+  const queryParts = [];
 
-  const url = new URL(baseUrl, window.location.origin);
-
-  // Process complex parameters like search[name,code]=tested
   for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null) {
-      continue;
-    }
+    if (value === undefined || value === null) continue;
 
-    if (typeof value === 'object' && !Array.isArray(value)) {
-      // Handle nested objects
+    // Custom format: key with brackets and CSV (e.g. includes[emails,phones]=true)
+    const isBracketCsvKey =
+      key.includes('[') && key.includes(',') && key.includes(']');
+
+    if (isBracketCsvKey) {
+      // Jangan encode key-nya
+      queryParts.push(`${key}=${encodeURIComponent(value)}`);
+    } else if (key === 'includes' && Array.isArray(value)) {
+      // Khusus: includes[emails,phones,...]=true
+      const joined = value.join(',');
+      queryParts.push(`includes[${joined}]=true`);
+    } else if (typeof value === 'object' && !Array.isArray(value)) {
+      // Nested object: search[name]=abc
       for (const [nestedKey, nestedValue] of Object.entries(value)) {
         if (nestedValue !== undefined && nestedValue !== null) {
-          url.searchParams.append(`${key}[${nestedKey}]`, nestedValue);
+          queryParts.push(
+            `${encodeURIComponent(key)}[${encodeURIComponent(nestedKey)}]=${encodeURIComponent(nestedValue)}`,
+          );
         }
       }
     } else {
-      // Handle standard params and arrays
-      url.searchParams.append(key, value);
+      // Normal key=value
+      queryParts.push(
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+      );
     }
   }
 
-  return url.toString().replace(window.location.origin, '');
+  const queryString = queryParts.join('&');
+  return `${baseUrl}?${queryString}`;
 }
 
 /**

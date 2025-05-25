@@ -155,28 +155,36 @@ const Forms = ({
                   name="is_customer"
                   control={control}
                   render={(form) => (
-                    <Checkbox {...form.field}>Customer</Checkbox>
+                    <Checkbox {...form.field} checked={form?.field?.value}>
+                      Customer
+                    </Checkbox>
                   )}
                 />
                 <Controller
                   name="is_supplier"
                   control={control}
                   render={(form) => (
-                    <Checkbox {...form.field}>Supplier</Checkbox>
+                    <Checkbox {...form.field} checked={form?.field?.value}>
+                      Supplier
+                    </Checkbox>
                   )}
                 />
                 <Controller
                   name="is_employee"
                   control={control}
                   render={(form) => (
-                    <Checkbox {...form.field}>Employee</Checkbox>
+                    <Checkbox {...form.field} checked={form?.field?.value}>
+                      Employee
+                    </Checkbox>
                   )}
                 />
                 <Controller
                   name="is_salesman"
                   control={control}
                   render={(form) => (
-                    <Checkbox {...form.field}>Salesman</Checkbox>
+                    <Checkbox {...form.field} checked={form?.field?.value}>
+                      Salesman
+                    </Checkbox>
                   )}
                 />
               </Space>

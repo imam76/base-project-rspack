@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ConfigProvider } from 'antd';
+import { App as ANTApp, ConfigProvider } from 'antd';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import('@ant-design/v5-patch-for-react-19');
@@ -15,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ConfigProvider theme={theme}>
-        <App />
+        <ANTApp>
+          <App />
+        </ANTApp>
       </ConfigProvider>
     </QueryClientProvider>
   </React.StrictMode>,

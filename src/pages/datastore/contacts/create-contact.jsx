@@ -1,4 +1,5 @@
 import { Breadcrumb, Flex } from 'antd';
+import { App } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
@@ -8,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Forms from './forms';
 
 const CreateContact = () => {
+  const { notification } = App.useApp();
   const navigate = useNavigate();
   const {
     // register,
@@ -28,16 +30,25 @@ const CreateContact = () => {
 
   const endpoints = '/api/v2/contacts';
 
-  const { isSubmitting, isSuccess, submit } = useDataQuery({
+  const { isSubmitting, submit } = useDataQuery({
     queryKey: ['contacts'],
     getUrl: endpoints,
     method: 'POST',
     submitUrl: endpoints,
     onSuccess: () => {
-      alert('User berhasil ditambahkan!');
+      notification.success({
+        message: 'Contact Created',
+        description: 'Contact has been successfully Created.',
+        duration: 3,
+      });
+      navigate('/datastore/contacts');
     },
     onError: (err) => {
-      console.error('Gagal submit:', err);
+      notification.success({
+        message: 'Contact Creation Failed',
+        description: err.message || 'Failed to create contact.',
+        duration: 3,
+      });
     },
     filters: {
       per_page: 10,
@@ -56,11 +67,8 @@ const CreateContact = () => {
   });
 
   const onSubmit = (data) => {
-    console.log('ISI DATAAAAAAAAA =>', data);
     submit(data);
   };
-
-  console.log('INII CREATE =>', errors, isSubmitting, isSuccess);
 
   return (
     <Flex gap={'large'} vertical>

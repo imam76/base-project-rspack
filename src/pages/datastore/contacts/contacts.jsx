@@ -42,7 +42,7 @@ const useStyle = createStyles(({ css, token }) => {
 });
 
 //default variables
-const DEFAULT_PER_PAGE = 10;
+const DEFAULT_PER_PAGE = 8;
 const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
   per_page: DEFAULT_PER_PAGE,
@@ -133,6 +133,7 @@ const Contacts = () => {
   const navigate = useNavigate();
   const navigateToChild = navigateToChildRoute();
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const [currentPage, setCurrentPage] = useState(1);
   const { searchParam, updateParam } = useDebouncedSearchParams(800); // bisa ganti delay
   const [selectedRow, setSelectedRow] = useState([]);
 
@@ -145,30 +146,34 @@ const Contacts = () => {
     filters: DEFAULT_FILTERS,
   });
 
-  // Update filters when search changes
+  // Update filters when changes
   useEffect(() => {
     setFilters({
       per_page: perPage,
+      page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
       'search[name,code]': searchValue,
     });
-  }, [searchValue, setFilters, perPage]);
+  }, [currentPage, searchValue, setFilters, perPage]);
 
   const handleSearch = (e) => {
     updateParam('search', e.target.value);
   };
 
   const onShowSizeChange = (_, perPage) => {
-    // console.log("INIII ONSHOW SIZE CHANGE =>", _, perPage);
     setPerPage(perPage);
   };
 
+  // Function to handle row selection
   const handleSelectRow = (selectedRowKeys, selectedRows) => {
-    console.log('selectedRowKeys =>', selectedRowKeys);
-    console.log('selectedRows =>', selectedRows);
+    console.info('selectedRowKeys =>', selectedRowKeys);
+    console.info('selectedRows =>', selectedRows);
     setSelectedRow(selectedRowKeys);
   };
 
-  console.log('INIII PROPS CONTACT =>', isLoading, initialData, selectedRow);
+  // Function to handle page change
+  const onChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <Flex gap={'large'} vertical>
@@ -238,9 +243,10 @@ const Contacts = () => {
             </Space>
           </Flex>
           <Table
-            size="small"
+            // size="small"
             loading={isLoading}
             className={`${styles.customTable} striped-table`}
+            // scroll={{ y: 55 * 10 }}
             dataSource={initialData?.results ?? []}
             rowKey={'id'}
             rowSelection={{
@@ -252,10 +258,13 @@ const Contacts = () => {
               TitleTableRender({ selectedLength: selectedRow.length })
             }
             pagination={{
+              current: currentPage,
+              onChange: onChange,
               showSizeChanger: true,
               onShowSizeChange: onShowSizeChange,
+              defaultPageSize: DEFAULT_PER_PAGE,
               pageSize: perPage,
-              total: initialData?.per_page,
+              total: initialData?.count ?? 0,
               position: ['bottomLeft'],
             }}
           />

@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router';
 import { ContactFormSchema } from '@/schema';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { App } from 'antd';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import Forms from './forms';
 
 const CreateContact = () => {
+  const { notification } = App.useApp();
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -18,26 +20,27 @@ const CreateContact = () => {
       ? `/api/v2/contacts/${id}`
       : '/api/v2/contacts';
 
-  console.log('URL PARAMS =>', id);
-
-  const { initialData, isLoading, isSubmitting, isSuccess, submit } =
-    useDataQuery({
-      queryKey: ['contacts'],
-      getUrl: endpoints,
-      method: 'PUT', // Use PUT for updating existing contact
-      submitUrl: endpoints,
-      onSuccess: () => {
-        alert('User berhasil edit!');
-      },
-      onError: (err) => {
-        console.error('Gagal submit:', err);
-      },
-      // filters: {
-      //   per_page: 10,
-      //   page: 1,
-      //   includes: ["emails", "phones", "other_fields", "addresses", "contact_persons", "restricted_departments", "restricted_contacts", "bank_accounts"],
-      // },
-    });
+  const { initialData, isLoading, isSubmitting, submit } = useDataQuery({
+    queryKey: ['contacts'],
+    getUrl: endpoints,
+    method: 'PUT', // Use PUT for updating existing contact
+    submitUrl: endpoints,
+    onSuccess: () => {
+      notification.success({
+        message: 'Contact Updated',
+        description: 'Contact has been successfully updated.',
+        duration: 3,
+      });
+      navigate('/datastore/contacts');
+    },
+    onError: (err) => {
+      notification.success({
+        message: 'Contact Update Failed',
+        description: err.message || 'Failed to update contact.',
+        duration: 3,
+      });
+    },
+  });
 
   const {
     // register,
@@ -60,6 +63,7 @@ const CreateContact = () => {
   useEffect(() => {
     if (initialData) {
       reset({
+        ...initialData,
         name: initialData.name,
         email: initialData.emails[0]?.value || '',
         phone: initialData.phones[0]?.value || '',
@@ -70,11 +74,16 @@ const CreateContact = () => {
   }, [initialData, reset]);
 
   const onSubmit = (data) => {
-    console.log('ISI DATAAAAAAAAA =>', data);
-    submit(data);
+    const body = {
+      ...data,
+      emails: [{ value: data.email }],
+      phones: [{ value: data.phone }],
+      npwp: initialData.npwp || '',
+      addresses: [{ address: data.address }],
+      reason: 'Update contact information',
+    };
+    submit(body);
   };
-
-  console.log('INII CREATE =>', errors, isSubmitting, isSuccess);
 
   return (
     <Flex gap={'large'} vertical>

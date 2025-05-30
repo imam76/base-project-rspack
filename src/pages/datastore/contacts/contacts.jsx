@@ -1,7 +1,4 @@
-import ContextMenuOption from '@/blocs/ContextMenuOption';
-import { useDataQuery } from '@/utils/hooks/useDataQuery';
-import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
-import navigateToChildRoute from '@/utils/navigateToChild';
+import ProSkeleton from '@ant-design/pro-skeleton';
 import {
   Breadcrumb,
   Button,
@@ -20,7 +17,11 @@ import {
   RefreshCcw,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
+
+import ContextMenuOption from '@/blocs/ContextMenuOption';
+import { useDataQuery } from '@/utils/hooks/useDataQuery';
+import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
 
 // styles variables
 const useStyle = createStyles(({ css, token }) => {
@@ -42,7 +43,7 @@ const useStyle = createStyles(({ css, token }) => {
 });
 
 //default variables
-const DEFAULT_PER_PAGE = 8;
+const DEFAULT_PER_PAGE = 10;
 const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
   per_page: DEFAULT_PER_PAGE,
@@ -131,7 +132,6 @@ const TitleTableRender = ({ selectedLength }) => {
 const Contacts = () => {
   const { styles } = useStyle();
   const navigate = useNavigate();
-  const navigateToChild = navigateToChildRoute();
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [currentPage, setCurrentPage] = useState(1);
   const { searchParam, updateParam } = useDebouncedSearchParams(800); // bisa ganti delay
@@ -167,6 +167,7 @@ const Contacts = () => {
   const handleSelectRow = (selectedRowKeys, selectedRows) => {
     console.info('selectedRowKeys =>', selectedRowKeys);
     console.info('selectedRows =>', selectedRows);
+
     setSelectedRow(selectedRowKeys);
   };
 
@@ -174,6 +175,10 @@ const Contacts = () => {
   const onChange = (page) => {
     setCurrentPage(page);
   };
+
+  if (isLoading) {
+    return <ProSkeleton type="result" />;
+  }
 
   return (
     <Flex gap={'large'} vertical>
@@ -204,15 +209,17 @@ const Contacts = () => {
           enterButton
         />
       </Flex>
+
       <Card>
         <Space size={'small'} direction="vertical" style={{ display: 'flex' }}>
-          <Flex justify="space-between">
+          <Flex justify="space-between" wrap="wrap">
             <Space size={'small'}>
               <Title level={2}>Contacts</Title>
               <Title level={3} type="secondary" strong>
                 {initialData?.count}
               </Title>
             </Space>
+
             <Space size={'small'}>
               <Button
                 variant="outlined"
@@ -228,6 +235,7 @@ const Contacts = () => {
                 shape="default"
                 icon={<ListFilterIcon size={12} />}
                 size={'middle'}
+                onClick={() => navigate('filter')}
               />
               <Button variant="outlined" color="primary">
                 <LucideDownload size={16} />
@@ -236,28 +244,32 @@ const Contacts = () => {
               <Button
                 variant="solid"
                 color="primary"
-                onClick={() => navigateToChild({ childrenPath: 'create' })}
+                onClick={() => navigate('/datastore/contacts/create')}
               >
                 Create
               </Button>
             </Space>
           </Flex>
+
           <Table
-            // size="small"
+            size="middle"
             loading={isLoading}
             className={`${styles.customTable} striped-table`}
             // scroll={{ y: 55 * 10 }}
             dataSource={initialData?.results ?? []}
             rowKey={'id'}
             rowSelection={{
+              preserveSelectedRowKeys: true,
               type: 'checkbox',
               onChange: handleSelectRow,
+              checkStrictly: true,
             }}
             columns={columns}
             title={() =>
               TitleTableRender({ selectedLength: selectedRow.length })
             }
             pagination={{
+              responsive: true,
               current: currentPage,
               onChange: onChange,
               showSizeChanger: true,
@@ -266,10 +278,12 @@ const Contacts = () => {
               pageSize: perPage,
               total: initialData?.count ?? 0,
               position: ['bottomLeft'],
+              size: 'default',
             }}
           />
         </Space>
       </Card>
+      <Outlet />
     </Flex>
   );
 };

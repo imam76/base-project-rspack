@@ -21,6 +21,7 @@ const Forms = ({
   isLoading,
   isSubmitting,
   handleSubmit,
+  isDetail = false,
   errors,
 }) => {
   const navigate = useNavigate();
@@ -29,9 +30,17 @@ const Forms = ({
     <Card>
       <ProForm
         disabled={isLoading || isSubmitting}
+        readonly={isDetail}
         onFinish={handleSubmit}
         onReset={() => navigate(-1)}
         submitter={{
+          submitButtonProps: {
+            disabled: isLoading || isSubmitting,
+            loading: isLoading || isSubmitting,
+            style: {
+              display: isDetail ? 'none' : 'inline-block',
+            },
+          },
           searchConfig: {
             submitText: 'Save',
             resetText: 'Close',
@@ -154,6 +163,7 @@ const Forms = ({
                 <Controller
                   name="is_customer"
                   control={control}
+                  disabled={isDetail}
                   render={(form) => (
                     <Checkbox {...form.field} checked={form?.field?.value}>
                       Customer
@@ -163,6 +173,7 @@ const Forms = ({
                 <Controller
                   name="is_supplier"
                   control={control}
+                  disabled={isDetail}
                   render={(form) => (
                     <Checkbox {...form.field} checked={form?.field?.value}>
                       Supplier
@@ -172,6 +183,7 @@ const Forms = ({
                 <Controller
                   name="is_employee"
                   control={control}
+                  disabled={isDetail}
                   render={(form) => (
                     <Checkbox {...form.field} checked={form?.field?.value}>
                       Employee
@@ -181,6 +193,7 @@ const Forms = ({
                 <Controller
                   name="is_salesman"
                   control={control}
+                  disabled={isDetail}
                   render={(form) => (
                     <Checkbox {...form.field} checked={form?.field?.value}>
                       Salesman

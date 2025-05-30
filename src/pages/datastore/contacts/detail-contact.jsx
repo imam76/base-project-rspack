@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import Forms from './forms';
 
-const EditContact = () => {
+const DetailContact = () => {
   const { notification } = App.useApp();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -109,22 +109,23 @@ const EditContact = () => {
               onClick: () => navigate('/datastore/contacts'),
             },
             {
-              title: 'Edit Contacts',
+              title: 'Detail Contact',
             },
           ]}
         />
       </Flex>
 
       <Forms
-        title="Edit Contact"
+        title={'Detail Contact'}
         control={control}
         isLoading={isLoading}
         handleSubmit={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
         errors={errors}
+        isDetail={true}
       />
     </Flex>
   );
 };
 
-export default EditContact;
+export default DetailContact;

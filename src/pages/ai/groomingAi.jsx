@@ -1,4 +1,5 @@
 import { Avatar, Breadcrumb, Button, Card, Flex, Input, Space } from 'antd';
+import { ChevronRight } from 'lucide-react';
 import { Brain, Send, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 

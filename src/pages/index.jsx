@@ -101,7 +101,7 @@ const AppLayout = () => {
         <Content
           style={{
             margin: '24px 16px',
-            padding: 24,
+            padding: '0px 24px',
             borderRadius: 4,
             minHeight: 280,
           }}

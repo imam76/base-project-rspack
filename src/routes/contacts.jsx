@@ -1,5 +1,7 @@
+import FilterContact from '@/pages/datastore/contacts/filter-contact';
 import Api from '@/utils/axios/api';
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
+import { redirect } from 'react-router';
 
 /** @type {import('react-router').RouteObject[]} */
 const routes = [
@@ -8,9 +10,22 @@ const routes = [
     children: [
       {
         index: true,
+        loader: () => redirect('/datastore/contacts/list'),
+      },
+      {
+        path: 'list',
         element: ReactLazyWithSuspense(
           async () => await import('@/pages/datastore/contacts/contacts'),
         ),
+        children: [
+          {
+            path: 'filter',
+            element: ReactLazyWithSuspense(
+              async () =>
+                await import('@/pages/datastore/contacts/filter-contact'),
+            ),
+          },
+        ],
       },
       {
         path: 'create',
@@ -23,6 +38,16 @@ const routes = [
         element: ReactLazyWithSuspense(
           async () => await import('@/pages/datastore/contacts/edit-contact'),
         ),
+      },
+      {
+        path: 'detail/:id',
+        element: ReactLazyWithSuspense(
+          async () => await import('@/pages/datastore/contacts/detail-contact'),
+        ),
+      },
+      {
+        path: '*',
+        element: ReactLazyWithSuspense(() => import('@/pages/notfound')),
       },
     ],
   },

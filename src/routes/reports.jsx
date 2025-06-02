@@ -17,24 +17,6 @@ const routes = [
           async () => await import('@/pages/reports/profit-loss'),
         ),
       },
-      {
-        path: 'expenses',
-        element: ReactLazyWithSuspense(
-          async () => await import('@/pages/reports/expenses'),
-        ),
-      },
-      {
-        path: 'revenue',
-        element: ReactLazyWithSuspense(
-          async () => await import('@/pages/reports/revenue'),
-        ),
-      },
-      {
-        path: 'cash-flow',
-        element: ReactLazyWithSuspense(
-          async () => await import('@/pages/reports/cash-flow'),
-        ),
-      },
     ],
   },
 ];

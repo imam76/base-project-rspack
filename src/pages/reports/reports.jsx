@@ -61,32 +61,28 @@ const Reports = () => {
   ];
 
   return (
-    <div>
-      <Title level={2}>Financial Reports</Title>
+   <div>
+      <Title level={2}>Reports</Title>
       <Row gutter={[16, 16]}>
         {menuItems.map((item) => (
-          <Col xs={24} sm={12} md={8} lg={8} key={item.title}>
+          <Col xs={24} sm={12} md={6} key={item.title}>
             <Card
               hoverable
-               style={{
+              style={{
                 borderRadius: '8px',
                 textAlign: 'center',
                 transition: 'all 0.3s',
               }}
               onClick={() => navigate(item.path)}
-              className="hover:shadow-lg transition-all duration-300"
+              className="hover:shadow-lg"
             >
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  {item.icon}
-                </div>
-                <div>
-                  <Title level={4} style={{ marginBottom: '4px' }}>
-                    {item.title}
-                  </Title>
-                  <p className="text-gray-500 text-sm">{item.description}</p>
-                </div>
+              <div className="flex justify-center items-center p-4">
+                {item.icon}
               </div>
+              <Title level={4}>{item.title}</Title>
+              <p className="text-gray-500 text-sm mt-2">
+                Manage your {item.title.toLowerCase()} information
+              </p>
             </Card>
           </Col>
         ))}

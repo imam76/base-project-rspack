@@ -80,7 +80,7 @@ const Reports = () => {
                 {item.icon}
               </div>
               <Title level={4}>{item.title}</Title>
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="w-6 text-gray-500 text-sm mt-2">
                 Manage your {item.title.toLowerCase()} information
               </p>
             </Card>

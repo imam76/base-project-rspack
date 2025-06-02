@@ -68,9 +68,10 @@ const Reports = () => {
           <Col xs={24} sm={12} md={8} lg={8} key={item.title}>
             <Card
               hoverable
-              style={{
+               style={{
                 borderRadius: '8px',
-                height: '100%',
+                textAlign: 'center',
+                transition: 'all 0.3s',
               }}
               onClick={() => navigate(item.path)}
               className="hover:shadow-lg transition-all duration-300"

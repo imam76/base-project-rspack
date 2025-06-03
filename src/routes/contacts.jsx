@@ -1,5 +1,3 @@
-import FilterContact from '@/pages/datastore/contacts/filter-contact';
-import Api from '@/utils/axios/api';
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import { redirect } from 'react-router';
 

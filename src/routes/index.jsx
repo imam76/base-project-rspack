@@ -1,5 +1,4 @@
 import AppLayout from '@/pages';
-import NotFound from '@/pages/notfound';
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import { createBrowserRouter } from 'react-router';
 import datastore from './datastore';

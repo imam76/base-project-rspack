@@ -136,8 +136,6 @@ const Contacts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { searchParam, updateParam } = useDebouncedSearchParams(800); // bisa ganti delay
   const [selectedRow, setSelectedRow] = useState([]);
-
-  const searchValue = searchParam.get('search') ?? '';
   const endpoints = '/api/v2/contacts';
 
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
@@ -148,15 +146,17 @@ const Contacts = () => {
 
   // Update filters when changes
   useEffect(() => {
+    const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
+    const searchValue = getAllParams['search[name,code]'] ?? '';
     setFilters({
+      ...getAllParams,
       per_page: perPage,
       page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
-      'search[name,code]': searchValue,
     });
-  }, [currentPage, searchValue, setFilters, perPage]);
+  }, [currentPage, setFilters, perPage, searchParam]);
 
   const handleSearch = (e) => {
-    updateParam('search', e.target.value);
+    updateParam('search[name,code]', e.target.value);
   };
 
   const onShowSizeChange = (_, perPage) => {

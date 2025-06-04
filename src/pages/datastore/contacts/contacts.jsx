@@ -22,6 +22,8 @@ import { Outlet, useNavigate } from 'react-router';
 import ContextMenuOption from '@/blocs/ContextMenuOption';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
+import renderTags from '@/utils/renderTags';
+import { Trash2 } from 'lucide-react';
 
 // styles variables
 const useStyle = createStyles(({ css, token }) => {
@@ -78,17 +80,17 @@ const columns = [
     title: 'Email',
     render: (column) => column?.emails?.[0]?.value ?? '-',
   },
-  // {
-  //   title: 'Status',
-  //   dataIndex: 'is_active',
-  //   key: 'is_active',
-  //   width: 200,
-  //   justify: 'center',
-  //   render: (_, record) => {
-  //     const status = record.is_active ? 'active' : 'inactive';
-  //     return renderTags(_, { tags: [status] });
-  //   },
-  // },
+  {
+    title: 'Status',
+    dataIndex: 'is_active',
+    key: 'is_active',
+    width: 100,
+    justify: 'center',
+    render: (_, record) => {
+      const status = record.is_active ? 'active' : 'inactive';
+      return renderTags(_, { tags: [status] });
+    },
+  },
   {
     title: '',
     dataIndex: '',
@@ -128,16 +130,47 @@ const TitleTableRender = ({ selectedLength }) => {
   );
 };
 
-// main  component
+// Function to render filter button
+const renderFilterButton = (hasActiveFilters, clearAllParams, navigate) => {
+  if (hasActiveFilters) {
+    return (
+      <Button
+        variant="outlined"
+        color="primary"
+        shape="default"
+        icon={<Trash2 size={12} />}
+        size={'middle'}
+        onClick={() => clearAllParams?.()}
+      >
+        Clear Filter
+      </Button>
+    );
+  }
+  return (
+    <Button
+      variant="outlined"
+      color="primary"
+      shape="default"
+      icon={<ListFilterIcon size={12} />}
+      size={'middle'}
+      onClick={() => navigate('filter')}
+    />
+  );
+};
+
+// main component
 const Contacts = () => {
   const { styles } = useStyle();
   const navigate = useNavigate();
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [currentPage, setCurrentPage] = useState(1);
-  const { searchParam, updateParam } = useDebouncedSearchParams(800); // bisa ganti delay
+  const { searchParam, updateParam, clearAllParams } =
+    useDebouncedSearchParams(800); // bisa ganti delay
   const [selectedRow, setSelectedRow] = useState([]);
   const endpoints = '/api/v2/contacts';
 
+  const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
+  const hasActiveFilters = Object.keys(getAllParams).length > 0;
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
     queryKey: ['contacts'],
     getUrl: endpoints,
@@ -146,12 +179,14 @@ const Contacts = () => {
 
   // Update filters when changes
   useEffect(() => {
-    const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
-    const searchValue = getAllParams['search[name,code]'] ?? '';
+    const _getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
+    const searchValue = _getAllParams['search[name,code]'] ?? '';
+
     setFilters({
-      ...getAllParams,
+      ..._getAllParams,
       per_page: perPage,
       page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
+      'search[name,code]': searchValue,
     });
   }, [currentPage, setFilters, perPage, searchParam]);
 
@@ -175,10 +210,6 @@ const Contacts = () => {
   const onChange = (page) => {
     setCurrentPage(page);
   };
-
-  if (isLoading) {
-    return <ProSkeleton type="result" />;
-  }
 
   return (
     <Flex gap={'large'} vertical>
@@ -209,7 +240,6 @@ const Contacts = () => {
           enterButton
         />
       </Flex>
-
       <Card>
         <Space size={'small'} direction="vertical" style={{ display: 'flex' }}>
           <Flex justify="space-between" wrap="wrap">
@@ -229,14 +259,8 @@ const Contacts = () => {
                 size={'middle'}
                 onClick={refetch}
               />
-              <Button
-                variant="outlined"
-                color="primary"
-                shape="default"
-                icon={<ListFilterIcon size={12} />}
-                size={'middle'}
-                onClick={() => navigate('filter')}
-              />
+
+              {renderFilterButton(hasActiveFilters, clearAllParams, navigate)}
               <Button variant="outlined" color="primary">
                 <LucideDownload size={16} />
                 Export to CSV
@@ -266,7 +290,7 @@ const Contacts = () => {
             }}
             columns={columns}
             title={() =>
-              TitleTableRender({ selectedLength: selectedRow.length })
+              TitleTableRender({ selectedLength: selectedRow.length, navigate })
             }
             pagination={{
               responsive: true,

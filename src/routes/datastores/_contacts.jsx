@@ -8,19 +8,19 @@ const routes = [
     children: [
       {
         index: true,
-        loader: () => redirect('/datastore/contacts/list'),
+        loader: () => redirect('/datastores/contacts/list'),
       },
       {
         path: 'list',
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastore/contacts/contacts'),
+          async () => await import('@/pages/datastores/contacts/contacts'),
         ),
         children: [
           {
             path: 'filter',
             element: ReactLazyWithSuspense(
               async () =>
-                await import('@/pages/datastore/contacts/filter-contact'),
+                await import('@/pages/datastores/contacts/filter-contact'),
             ),
           },
         ],
@@ -28,19 +28,21 @@ const routes = [
       {
         path: 'create',
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastore/contacts/create-contact'),
+          async () =>
+            await import('@/pages/datastores/contacts/create-contact'),
         ),
       },
       {
         path: 'edit/:id',
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastore/contacts/edit-contact'),
+          async () => await import('@/pages/datastores/contacts/edit-contact'),
         ),
       },
       {
         path: 'detail/:id',
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastore/contacts/detail-contact'),
+          async () =>
+            await import('@/pages/datastores/contacts/detail-contact'),
         ),
       },
       {

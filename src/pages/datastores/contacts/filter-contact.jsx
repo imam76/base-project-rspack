@@ -34,7 +34,7 @@ export default function FilterContact() {
       'currency[id]': data.currency.value,
     };
     const queryParams = new URLSearchParams(filterParams).toString();
-    navigate(`/datastore/contacts/list?${queryParams}`, { replace: true });
+    navigate(`/datastores/contacts/list?${queryParams}`, { replace: true });
   };
 
   return (

@@ -180,6 +180,7 @@ const Contacts = () => {
     ],
     filename: `contacts_${moment().format('YYYY-MM-DD')}`,
     defaultParams: {
+      per_page: 100000,
       is_skip_pagination: true,
       [`includes[${DEFAULT_FILTERS.includes.join(',')}]`]: true,
     },
@@ -238,7 +239,7 @@ const Contacts = () => {
           items={[
             {
               title: 'Datastore',
-              onClick: () => navigate('/datastore'),
+              onClick: () => navigate('/datastores'),
             },
             {
               title: 'Contacts',
@@ -289,7 +290,7 @@ const Contacts = () => {
               <Button
                 variant="solid"
                 color="primary"
-                onClick={() => navigate('/datastore/contacts/create')}
+                onClick={() => navigate('/datastores/contacts/create')}
               >
                 Create
               </Button>

@@ -4,8 +4,6 @@ import moment from 'moment';
 import Papa from 'papaparse';
 import { useState } from 'react';
 
-const { message } = App.useApp();
-
 /**
  * Custom hook for exporting data to CSV
  * @param {Object} config - Configuration object
@@ -25,6 +23,7 @@ const useExportCSV = ({
   transformData = null,
   csvOptions = {},
 }) => {
+  const { message } = App.useApp();
   const [isExporting, setIsExporting] = useState(false);
 
   /**

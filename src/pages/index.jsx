@@ -22,9 +22,9 @@ const AppLayout = () => {
       label: 'Dashboard',
     },
     {
-      key: '/datastore',
+      key: '/datastores',
       icon: <Database size={16} />,
-      label: 'Datastore',
+      label: 'Datastores',
     },
     {
       key: '/trasactions',

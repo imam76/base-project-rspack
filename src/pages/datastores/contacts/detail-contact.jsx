@@ -33,7 +33,7 @@ const DetailContact = () => {
         description: 'Contact has been successfully updated.',
         duration: 3,
       });
-      navigate('/datastore/contacts');
+      navigate('/datastores/contacts');
     },
     onError: (err) => {
       notification.success({
@@ -102,11 +102,11 @@ const DetailContact = () => {
           items={[
             {
               title: 'Datastore',
-              onClick: () => navigate('/datastore'),
+              onClick: () => navigate('/datastores'),
             },
             {
               title: 'Contacts',
-              onClick: () => navigate('/datastore/contacts'),
+              onClick: () => navigate('/datastores/contacts'),
             },
             {
               title: 'Detail Contact',

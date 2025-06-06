@@ -1,4 +1,3 @@
-import ProSkeleton from '@ant-design/pro-skeleton';
 import {
   Breadcrumb,
   Button,
@@ -16,12 +15,14 @@ import {
   MoreVertical,
   RefreshCcw,
 } from 'lucide-react';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 
 import ContextMenuOption from '@/blocs/ContextMenuOption';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
+import useExportCSV from '@/utils/hooks/useExportCSV';
 import renderTags from '@/utils/renderTags';
 import { Trash2 } from 'lucide-react';
 
@@ -45,6 +46,7 @@ const useStyle = createStyles(({ css, token }) => {
 });
 
 //default variables
+const ENDPOINTS = '/api/v2/contacts';
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
@@ -160,20 +162,34 @@ const renderFilterButton = (hasActiveFilters, clearAllParams, navigate) => {
 
 // main component
 const Contacts = () => {
-  const { styles } = useStyle();
   const navigate = useNavigate();
+  const { styles } = useStyle();
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRow, setSelectedRow] = useState([]);
   const { searchParam, updateParam, clearAllParams } =
     useDebouncedSearchParams(800); // bisa ganti delay
-  const [selectedRow, setSelectedRow] = useState([]);
-  const endpoints = '/api/v2/contacts';
+  const { exportToCSV, isExporting } = useExportCSV({
+    endpoint: ENDPOINTS,
+    selectedKeys: [
+      'id',
+      'name',
+      'code',
+      'emails.0.value', // Nested array access
+      'phones.0.value',
+    ],
+    filename: `contacts_${moment().format('YYYY-MM-DD')}`,
+    defaultParams: {
+      is_skip_pagination: true,
+      [`includes[${DEFAULT_FILTERS.includes.join(',')}]`]: true,
+    },
+  });
 
   const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
   const hasActiveFilters = Object.keys(getAllParams).length > 0;
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
     queryKey: ['contacts'],
-    getUrl: endpoints,
+    getUrl: ENDPOINTS,
     filters: DEFAULT_FILTERS,
   });
 
@@ -261,7 +277,12 @@ const Contacts = () => {
               />
 
               {renderFilterButton(hasActiveFilters, clearAllParams, navigate)}
-              <Button variant="outlined" color="primary">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => exportToCSV()}
+                loading={isExporting}
+              >
                 <LucideDownload size={16} />
                 Export to CSV
               </Button>

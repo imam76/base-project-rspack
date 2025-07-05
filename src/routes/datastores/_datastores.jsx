@@ -1,21 +1,21 @@
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
+import contacts from './_contacts';
 
 /** @type {import('react-router').RouteObject[]} */
 const routes = [
   {
-    path: 'reports',
+    path: 'datastores',
     children: [
       {
         index: true,
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/reports/reports'),
+          async () => await import('@/pages/datastores/datastores'),
         ),
       },
+      ...contacts,
       {
-        path: 'profit-loss',
-        element: ReactLazyWithSuspense(
-          async () => await import('@/pages/reports/profit-loss'),
-        ),
+        path: '*',
+        element: ReactLazyWithSuspense(() => import('@/pages/notfound')),
       },
     ],
   },

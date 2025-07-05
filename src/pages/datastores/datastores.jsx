@@ -20,42 +20,42 @@ const Datastore = () => {
     {
       title: 'Contacts',
       icon: <User size={24} />,
-      path: '/datastore/contacts/list',
+      path: '/datastores/contacts/list',
     },
     {
       title: 'Products',
       icon: <ShoppingCart size={24} />,
-      path: '/datastore/products/list',
+      path: '/datastores/products/list',
     },
     {
       title: 'Companies',
       icon: <Building2 size={24} />,
-      path: '/datastore/companies/list',
+      path: '/datastores/companies/list',
     },
     {
       title: 'Suppliers',
       icon: <Users size={24} />,
-      path: '/datastore/suppliers/list',
+      path: '/datastores/suppliers/list',
     },
     {
       title: 'Categories',
       icon: <Tags size={24} />,
-      path: '/datastore/categories/list',
+      path: '/datastores/categories/list',
     },
     {
       title: 'Inventory',
       icon: <Package size={24} />,
-      path: '/datastore/inventory/list',
+      path: '/datastores/inventory/list',
     },
     {
       title: 'Documents',
       icon: <FileText size={24} />,
-      path: '/datastore/documents/list',
+      path: '/datastores/documents/list',
     },
     {
       title: 'Settings',
       icon: <Settings size={24} />,
-      path: '/datastore/settings/list',
+      path: '/datastores/settings/list',
     },
   ];
 

@@ -1,18 +1,22 @@
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
-import contacts from './contacts';
+import financialStatement from './_financial-statement';
 
 /** @type {import('react-router').RouteObject[]} */
 const routes = [
   {
-    path: 'datastore',
+    path: 'reports',
     children: [
       {
         index: true,
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastore/datastore'),
+          async () => await import('@/pages/reports/reports'),
         ),
       },
-      ...contacts,
+      ...financialStatement,
+      {
+        path: '*',
+        element: ReactLazyWithSuspense(() => import('@/pages/notfound')),
+      },
     ],
   },
 ];

@@ -1,11 +1,12 @@
 import { Card, Col, Row, Typography } from 'antd';
 import {
   BarChart3,
+  Calculator,
+  CreditCard,
   DollarSign,
-  FileText,
-  LineChart,
+  FileBarChart,
   PieChart,
-  TrendingDown,
+  Receipt,
   TrendingUp,
 } from 'lucide-react';
 import { useNavigate } from 'react-router';
@@ -17,51 +18,39 @@ const Reports = () => {
 
   const menuItems = [
     {
-      title: 'Profit & Loss',
-      icon: <TrendingUp size={24} />,
-      description: 'View comprehensive profit and loss statements',
-      path: '/reports/profit-loss',
+      title: 'Financial Statement',
+      icon: <FileBarChart size={24} />,
+      path: '/reports/financial-statement',
+      description: 'Balance sheet, income statement, and cash flow reports',
     },
     {
-      title: 'Expense Tracking',
-      icon: <TrendingDown size={24} />,
-      description: 'Track and analyze business expenses',
-      path: '/reports/expenses',
-    },
-    {
-      title: 'Revenue Analysis',
-      icon: <DollarSign size={24} />,
-      description: 'Analyze revenue streams and trends',
-      path: '/reports/revenue',
-    },
-    {
-      title: 'Cash Flow',
-      icon: <LineChart size={24} />,
-      description: 'Monitor cash flow and liquidity',
-      path: '/reports/cash-flow',
-    },
-    {
-      title: 'Financial Ratios',
+      title: 'Sales Reports',
       icon: <BarChart3 size={24} />,
-      description: 'Key financial performance indicators',
-      path: '/reports/ratios',
+      path: '/reports/sales',
+      description: 'Sales performance and revenue analytics',
     },
     {
-      title: 'Tax Reports',
-      icon: <FileText size={24} />,
-      description: 'Tax summaries and reports',
-      path: '/reports/tax',
+      title: 'Receivable Payment',
+      icon: <CreditCard size={24} />,
+      path: '/reports/receivable-payment',
+      description: 'Customer payments and outstanding receivables',
     },
     {
-      title: 'Balance Sheet',
-      icon: <PieChart size={24} />,
-      description: 'View assets, liabilities, and equity',
-      path: '/reports/balance',
+      title: 'Purchase Reports',
+      icon: <Receipt size={24} />,
+      path: '/reports/purchase',
+      description: 'Purchase orders and supplier transactions',
+    },
+    {
+      title: 'Payable Reports',
+      icon: <DollarSign size={24} />,
+      path: '/reports/payable',
+      description: 'Supplier payments and outstanding payables',
     },
   ];
 
   return (
-   <div>
+    <div>
       <Title level={2}>Reports</Title>
       <Row gutter={[16, 16]}>
         {menuItems.map((item) => (
@@ -72,6 +61,7 @@ const Reports = () => {
                 borderRadius: '8px',
                 textAlign: 'center',
                 transition: 'all 0.3s',
+                minHeight: '180px',
               }}
               onClick={() => navigate(item.path)}
               className="hover:shadow-lg"
@@ -80,9 +70,7 @@ const Reports = () => {
                 {item.icon}
               </div>
               <Title level={4}>{item.title}</Title>
-              <p className="w-6 text-gray-500 text-sm mt-2">
-                Manage your {item.title.toLowerCase()} information
-              </p>
+              <p className="text-gray-500 text-sm mt-2">{item.description}</p>
             </Card>
           </Col>
         ))}

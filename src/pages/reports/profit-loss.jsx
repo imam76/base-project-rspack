@@ -132,9 +132,9 @@ const ProfitLoss = () => {
               }}
               summary={(pageData) => {
                 let totalAmount = 0;
-                pageData.forEach(({ amount }) => {
+                for (const { amount } of pageData) {
                   totalAmount += amount;
-                });
+                }
 
                 return (
                   <>

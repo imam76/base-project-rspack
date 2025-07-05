@@ -1,4 +1,3 @@
-import ProSkeleton from '@ant-design/pro-skeleton';
 import {
   Breadcrumb,
   Button,
@@ -16,12 +15,16 @@ import {
   MoreVertical,
   RefreshCcw,
 } from 'lucide-react';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 
 import ContextMenuOption from '@/blocs/ContextMenuOption';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams';
+import useExportCSV from '@/utils/hooks/useExportCSV';
+import renderTags from '@/utils/renderTags';
+import { Trash2 } from 'lucide-react';
 
 // styles variables
 const useStyle = createStyles(({ css, token }) => {
@@ -43,6 +46,7 @@ const useStyle = createStyles(({ css, token }) => {
 });
 
 //default variables
+const ENDPOINTS = '/api/v2/contacts';
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
@@ -78,17 +82,17 @@ const columns = [
     title: 'Email',
     render: (column) => column?.emails?.[0]?.value ?? '-',
   },
-  // {
-  //   title: 'Status',
-  //   dataIndex: 'is_active',
-  //   key: 'is_active',
-  //   width: 200,
-  //   justify: 'center',
-  //   render: (_, record) => {
-  //     const status = record.is_active ? 'active' : 'inactive';
-  //     return renderTags(_, { tags: [status] });
-  //   },
-  // },
+  {
+    title: 'Status',
+    dataIndex: 'is_active',
+    key: 'is_active',
+    width: 100,
+    justify: 'center',
+    render: (_, record) => {
+      const status = record.is_active ? 'active' : 'inactive';
+      return renderTags(_, { tags: [status] });
+    },
+  },
   {
     title: '',
     dataIndex: '',
@@ -128,35 +132,83 @@ const TitleTableRender = ({ selectedLength }) => {
   );
 };
 
-// main  component
+// Function to render filter button
+const renderFilterButton = (hasActiveFilters, clearAllParams, navigate) => {
+  if (hasActiveFilters) {
+    return (
+      <Button
+        variant="outlined"
+        color="primary"
+        shape="default"
+        icon={<Trash2 size={12} />}
+        size={'middle'}
+        onClick={() => clearAllParams?.()}
+      >
+        Clear Filter
+      </Button>
+    );
+  }
+  return (
+    <Button
+      variant="outlined"
+      color="primary"
+      shape="default"
+      icon={<ListFilterIcon size={12} />}
+      size={'middle'}
+      onClick={() => navigate('filter')}
+    />
+  );
+};
+
+// main component
 const Contacts = () => {
-  const { styles } = useStyle();
   const navigate = useNavigate();
+  const { styles } = useStyle();
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [currentPage, setCurrentPage] = useState(1);
-  const { searchParam, updateParam } = useDebouncedSearchParams(800); // bisa ganti delay
   const [selectedRow, setSelectedRow] = useState([]);
+  const { searchParam, updateParam, clearAllParams } =
+    useDebouncedSearchParams(800); // bisa ganti delay
+  const { exportToCSV, isExporting } = useExportCSV({
+    endpoint: ENDPOINTS,
+    selectedKeys: [
+      'id',
+      'name',
+      'code',
+      'emails.0.value', // Nested array access
+      'phones.0.value',
+    ],
+    filename: `contacts_${moment().format('YYYY-MM-DD')}`,
+    defaultParams: {
+      per_page: 100000,
+      is_skip_pagination: true,
+      [`includes[${DEFAULT_FILTERS.includes.join(',')}]`]: true,
+    },
+  });
 
-  const searchValue = searchParam.get('search') ?? '';
-  const endpoints = '/api/v2/contacts';
-
+  const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
+  const hasActiveFilters = Object.keys(getAllParams).length > 0;
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
     queryKey: ['contacts'],
-    getUrl: endpoints,
+    getUrl: ENDPOINTS,
     filters: DEFAULT_FILTERS,
   });
 
   // Update filters when changes
   useEffect(() => {
+    const _getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
+    const searchValue = _getAllParams['search[name,code]'] ?? '';
+
     setFilters({
+      ..._getAllParams,
       per_page: perPage,
       page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
       'search[name,code]': searchValue,
     });
-  }, [currentPage, searchValue, setFilters, perPage]);
+  }, [currentPage, setFilters, perPage, searchParam]);
 
   const handleSearch = (e) => {
-    updateParam('search', e.target.value);
+    updateParam('search[name,code]', e.target.value);
   };
 
   const onShowSizeChange = (_, perPage) => {
@@ -176,10 +228,6 @@ const Contacts = () => {
     setCurrentPage(page);
   };
 
-  if (isLoading) {
-    return <ProSkeleton type="result" />;
-  }
-
   return (
     <Flex gap={'large'} vertical>
       <Flex justify="space-between" align="center">
@@ -191,7 +239,7 @@ const Contacts = () => {
           items={[
             {
               title: 'Datastore',
-              onClick: () => navigate('/datastore'),
+              onClick: () => navigate('/datastores'),
             },
             {
               title: 'Contacts',
@@ -209,7 +257,6 @@ const Contacts = () => {
           enterButton
         />
       </Flex>
-
       <Card>
         <Space size={'small'} direction="vertical" style={{ display: 'flex' }}>
           <Flex justify="space-between" wrap="wrap">
@@ -229,22 +276,21 @@ const Contacts = () => {
                 size={'middle'}
                 onClick={refetch}
               />
+
+              {renderFilterButton(hasActiveFilters, clearAllParams, navigate)}
               <Button
                 variant="outlined"
                 color="primary"
-                shape="default"
-                icon={<ListFilterIcon size={12} />}
-                size={'middle'}
-                onClick={() => navigate('filter')}
-              />
-              <Button variant="outlined" color="primary">
+                onClick={() => exportToCSV()}
+                loading={isExporting}
+              >
                 <LucideDownload size={16} />
                 Export to CSV
               </Button>
               <Button
                 variant="solid"
                 color="primary"
-                onClick={() => navigate('/datastore/contacts/create')}
+                onClick={() => navigate('/datastores/contacts/create')}
               >
                 Create
               </Button>
@@ -266,7 +312,7 @@ const Contacts = () => {
             }}
             columns={columns}
             title={() =>
-              TitleTableRender({ selectedLength: selectedRow.length })
+              TitleTableRender({ selectedLength: selectedRow.length, navigate })
             }
             pagination={{
               responsive: true,

@@ -2,7 +2,7 @@ import { Card, Typography } from 'antd';
 
 const { Title } = Typography;
 
-const ProfitLoss = () => {
+const ReportProfitLoss = () => {
   return (
     <div>
       <Title level={2}>Profit & Loss Statement</Title>
@@ -13,4 +13,4 @@ const ProfitLoss = () => {
   );
 };
 
-export default ProfitLoss;
+export default ReportProfitLoss;

@@ -27,10 +27,21 @@ const routes = [
         ),
       },
       {
+        path: 'filter-profit-loss',
+        element: ReactLazyWithSuspense(
+          async () =>
+            await import(
+              '@/pages/reports/financial-statement/profit-loss/filter-report-profit-loss'
+            ),
+        ),
+      },
+      {
         path: 'profit-loss',
         element: ReactLazyWithSuspense(
           async () =>
-            await import('@/pages/reports/financial-statement/profit-loss'),
+            await import(
+              '@/pages/reports/financial-statement/profit-loss/report-profit-loss'
+            ),
         ),
       },
       {

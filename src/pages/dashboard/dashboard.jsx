@@ -24,7 +24,7 @@ const stats = [
   {
     id: 1,
     name: 'Income',
-    value: '12467.22',
+    value: '875000000',
     prevValue: '8923.11',
     changeType: 'increase',
     precision: 2,
@@ -34,7 +34,7 @@ const stats = [
   {
     id: 2,
     name: 'Expenses',
-    value: '7209.44',
+    value: '625000000',
     prevValue: '8654.33',
     changeType: 'decrease',
     precision: 2,
@@ -44,7 +44,7 @@ const stats = [
   {
     id: 3,
     name: 'Net Profit',
-    value: '634.22',
+    value: '250000000',
     prevValue: '3812.89',
     changeType: 'decrease',
     precision: 2,
@@ -54,7 +54,7 @@ const stats = [
   {
     id: 4,
     name: 'Customers',
-    value: '2456',
+    value: '2350',
     prevValue: '2123',
     changeType: 'increase',
     precision: 0,
@@ -131,14 +131,17 @@ const Dashboard = () => {
               <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center space-x-2">
                   <TrendingUp size={20} className="text-emerald-500" />
-                  <h3 className="font-medium text-gray-500">Profit</h3>
+                  <h3 className="font-medium text-gray-500">{stat.name}</h3>
                 </div>
                 <span className="text-xs px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full">
                   +2.5%
                 </span>
               </div>
               <p className="text-2xl font-bold text-gray-800 mb-4">
-                Rp {stat.value}
+                Rp{' '}
+                {Number(stat.value).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                })}
               </p>
               <Link
                 to={stat.detailsLink}
@@ -228,7 +231,7 @@ const Dashboard = () => {
               </div>
               <p className="text-2xl font-bold text-sky-600">
                 Rp.{' '}
-                {Number(5210000).toLocaleString('id-ID', {
+                {Number(1250000000).toLocaleString('id-ID', {
                   minimumFractionDigits: 2,
                 })}
               </p>
@@ -240,7 +243,7 @@ const Dashboard = () => {
               </div>
               <p className="text-2xl font-bold text-amber-600">
                 Rp.{' '}
-                {Number(5000000).toLocaleString('id-ID', {
+                {Number(450000000).toLocaleString('id-ID', {
                   minimumFractionDigits: 2,
                 })}
               </p>
@@ -252,7 +255,7 @@ const Dashboard = () => {
               </div>
               <p className="text-2xl font-bold text-purple-600">
                 Rp.{' '}
-                {Number(5000000).toLocaleString('id-ID', {
+                {Number(800000000).toLocaleString('id-ID', {
                   minimumFractionDigits: 2,
                 })}
               </p>
@@ -267,10 +270,15 @@ const Dashboard = () => {
                   <CircleDollarSign size={24} className="text-green-500" />
                   <div>
                     <p className="text-gray-700">Payment Received</p>
-                    <p className="text-sm text-gray-500">John Doe</p>
+                    <p className="text-sm text-gray-500">Toko Ratu Gombong</p>
                   </div>
                 </div>
-                <p className="text-green-500 font-bold">Rp. 500.000</p>
+                <p className="text-green-500 font-bold">
+                  Rp{' '}
+                  {Number(2500000).toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg shadow-sm">
@@ -278,10 +286,15 @@ const Dashboard = () => {
                   <CircleDollarSign size={24} className="text-green-500" />
                   <div>
                     <p className="text-gray-700">Payment Received</p>
-                    <p className="text-sm text-gray-500">John Doe</p>
+                    <p className="text-sm text-gray-500">Umar Malufi</p>
                   </div>
                 </div>
-                <p className="text-green-500 font-bold">Rp. 500.000</p>
+                <p className="text-green-500 font-bold">
+                  Rp{' '}
+                  {Number(1750000).toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg shadow-sm">
@@ -289,10 +302,15 @@ const Dashboard = () => {
                   <CircleDollarSign size={24} className="text-green-500" />
                   <div>
                     <p className="text-gray-700">Payment Received</p>
-                    <p className="text-sm text-gray-500">John Doe</p>
+                    <p className="text-sm text-gray-500">Royhan Rahim</p>
                   </div>
                 </div>
-                <p className="text-green-500 font-bold">Rp. 500.000</p>
+                <p className="text-green-500 font-bold">
+                  Rp{' '}
+                  {Number(3250000).toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
             </div>
           </Card>

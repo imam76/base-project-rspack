@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import AppLayout from '@/pages';
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import { createBrowserRouter } from 'react-router';
@@ -6,8 +7,16 @@ import reports from './reports/_reports';
 
 const router = createBrowserRouter([
   {
+    path: '/login',
+    element: ReactLazyWithSuspense(() => import('@/pages/auth/login')),
+  },
+  {
     path: '/',
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,

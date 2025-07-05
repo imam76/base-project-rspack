@@ -65,19 +65,9 @@ export default () => {
         // Navigate to the page they were trying to access or dashboard
         const from = location.state?.from?.pathname || '/dashboard';
         navigate(from, { replace: true });
-      } else {
-        notification.error({
-          message: 'Login Failed',
-          description: result.error || 'Invalid credentials. Please try again.',
-          duration: 3,
-        });
       }
     } catch (error) {
-      notification.error({
-        message: 'Login Failed',
-        description: error.message || 'An unexpected error occurred.',
-        duration: 3,
-      });
+      console.error('Login submission error:', error);
     }
   };
   return (

@@ -1,6 +1,8 @@
 import { AuthProvider } from '@/context/AuthContext';
+import { setGlobalNotificationApi } from '@/utils/globalNotification';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntdApp, ConfigProvider } from 'antd';
+import { useEffect } from 'react';
 import { RouterProvider } from 'react-router';
 
 import router from './routes/index.jsx';
@@ -15,6 +17,22 @@ const queryClient = new QueryClient({
   },
 });
 
+// Component to initialize global notification API
+function AppWithNotification() {
+  const { notification } = AntdApp.useApp();
+
+  useEffect(() => {
+    // Initialize global notification API
+    setGlobalNotificationApi(notification);
+  }, [notification]);
+
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />
+    </AuthProvider>
+  );
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -26,12 +44,7 @@ export default function App() {
         }}
       >
         <AntdApp>
-          <AuthProvider>
-            <RouterProvider
-              router={router}
-              fallbackElement={<p>Loading...</p>}
-            />
-          </AuthProvider>
+          <AppWithNotification />
         </AntdApp>
       </ConfigProvider>
     </QueryClientProvider>

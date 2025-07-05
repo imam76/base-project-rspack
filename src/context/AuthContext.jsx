@@ -14,6 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const userData = localStorage.getItem('userData');
 
@@ -30,6 +31,29 @@ export const AuthProvider = ({ children }) => {
 
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'userData' && e.newValue === null) {
+        setUser(null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    const interval = setInterval(() => {
+      const userData = localStorage.getItem('userData');
+      if (!userData && user) {
+        setUser(null);
+      }
+    }, 5000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [user]);
+
   const checkAuthStatus = async () => {
     try {
       const response = await Api().get('/api/auth/me');
@@ -40,6 +64,8 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
       }
     } catch (error) {
+      // Error handling is now done globally via axios interceptor
+      // Just clean up local state
       if (error.response?.status === 401) {
         localStorage.removeItem('userData');
         setUser(null);

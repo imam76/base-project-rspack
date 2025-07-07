@@ -81,7 +81,7 @@ const columns = [
   },
   {
     title: 'Email',
-    render: (column) => column?.emails?.[0]?.value ?? '-',
+    render: (column) => column?.email ?? '-',
   },
   {
     title: 'Status',

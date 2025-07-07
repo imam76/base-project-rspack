@@ -204,18 +204,20 @@ const Contacts = () => {
   // Update filters when changes
   useEffect(() => {
     const _getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
-    const searchValue = _getAllParams?.search_value ?? '';
+    // bisa juga pake ini 'search[name,code]' tergantung dari backend
+    // const searchValue = _getAllParams['search[name,code]'] ?? '';
+    const searchValue = _getAllParams?.search ?? '';
 
     setFilters({
       ..._getAllParams,
       per_page: perPage,
       page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
-      search_value: searchValue,
+      search: searchValue,
     });
   }, [currentPage, setFilters, perPage, searchParam]);
 
   const handleSearch = (e) => {
-    updateParam('search_value', e.target.value);
+    updateParam('search', e.target.value);
   };
 
   const onShowSizeChange = (_, perPage) => {

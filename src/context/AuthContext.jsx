@@ -91,24 +91,6 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: data.message || 'Login failed' };
     } catch (error) {
       console.error('Login error:', error);
-
-      if (error.response) {
-        const errorMessage =
-          error.response.data?.message || 'Invalid credentials';
-        return { success: false, error: errorMessage };
-      }
-
-      if (error.request) {
-        return {
-          success: false,
-          error: 'Network error. Please check your connection.',
-        };
-      }
-
-      return {
-        success: false,
-        error: error.message || 'An unexpected error occurred.',
-      };
     }
   };
 

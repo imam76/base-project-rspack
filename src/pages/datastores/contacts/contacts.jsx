@@ -46,7 +46,7 @@ const useStyle = createStyles(({ css, token }) => {
 });
 
 //default variables
-const ENDPOINTS = '/api/v2/contacts';
+const ENDPOINTS = '/api/v1/contacts';
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
@@ -68,8 +68,8 @@ const DEFAULT_FILTERS = {
 const columns = [
   {
     title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'full_name',
+    key: 'full_name',
     width: 200,
   },
   {
@@ -77,6 +77,7 @@ const columns = [
     dataIndex: 'code',
     key: 'code',
     width: 100,
+    render: (column) => column?.code ?? '-',
   },
   {
     title: 'Email',
@@ -189,6 +190,9 @@ const Contacts = () => {
   const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
   const hasActiveFilters = Object.keys(getAllParams).length > 0;
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
+    queryOptions: {
+      enabled: false, // Ensure the endpoint is defined
+    },
     queryKey: ['contacts'],
     getUrl: ENDPOINTS,
     filters: DEFAULT_FILTERS,
@@ -197,18 +201,21 @@ const Contacts = () => {
   // Update filters when changes
   useEffect(() => {
     const _getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
-    const searchValue = _getAllParams['search[name,code]'] ?? '';
+    const searchValue = _getAllParams.search_value ?? '';
 
     setFilters({
       ..._getAllParams,
       per_page: perPage,
       page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
-      'search[name,code]': searchValue,
+      search_fields: searchValue ? 'first_name,last_name' : undefined,
+      search_value: searchValue || undefined,
     });
-  }, [currentPage, setFilters, perPage, searchParam]);
+
+    refetch();
+  }, [currentPage, setFilters, perPage, searchParam, refetch]);
 
   const handleSearch = (e) => {
-    updateParam('search[name,code]', e.target.value);
+    updateParam('search_value', e.target.value);
   };
 
   const onShowSizeChange = (_, perPage) => {
@@ -302,7 +309,7 @@ const Contacts = () => {
             loading={isLoading}
             className={`${styles.customTable} striped-table`}
             // scroll={{ y: 55 * 10 }}
-            dataSource={initialData?.results ?? []}
+            dataSource={initialData?.data ?? []}
             rowKey={'id'}
             rowSelection={{
               preserveSelectedRowKeys: true,

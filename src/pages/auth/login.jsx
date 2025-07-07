@@ -38,8 +38,8 @@ export default () => {
   } = useForm({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'yqwhjahsdjhuuushdajshdjh@mailinator.com',
+      password: '123123',
     },
   });
 

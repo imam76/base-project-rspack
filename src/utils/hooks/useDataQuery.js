@@ -69,7 +69,6 @@ export function useDataQuery({
   filters = {},
   submitUrl,
   method = 'POST',
-  enabled = true,
   onSuccess,
   onError,
   transformResponse = (data) => data,
@@ -118,7 +117,6 @@ export function useDataQuery({
         throw error;
       }
     },
-    enabled: Boolean(fullGetUrl && enabled),
     ...queryOptions,
   });
 

@@ -52,6 +52,7 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
   per_page: DEFAULT_PER_PAGE,
   page: DEFAULT_PAGE,
+  search_fields: 'first_name,code',
   includes: [
     'emails',
     'phones',
@@ -67,17 +68,17 @@ const DEFAULT_FILTERS = {
 // setting table columns
 const columns = [
   {
+    // contoh value jika gak ada default value / fallback
     title: 'Name',
-    dataIndex: 'full_name',
-    key: 'full_name',
     width: 200,
+    render: (column) => column?.full_name ?? '-',
   },
   {
+    // contoh value jika gak ada default value / fallback
     title: 'Code',
     dataIndex: 'code',
     key: 'code',
     width: 100,
-    render: (column) => column?.code ?? '-',
   },
   {
     title: 'Email',
@@ -181,7 +182,6 @@ const Contacts = () => {
     ],
     filename: `contacts_${moment().format('YYYY-MM-DD')}`,
     defaultParams: {
-      per_page: 100000,
       is_skip_pagination: true,
       [`includes[${DEFAULT_FILTERS.includes.join(',')}]`]: true,
     },
@@ -189,10 +189,13 @@ const Contacts = () => {
 
   const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
   const hasActiveFilters = Object.keys(getAllParams).length > 0;
+  console.info(
+    'getAllParams =>',
+    searchParam,
+    searchParam.entries(),
+    getAllParams,
+  );
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
-    queryOptions: {
-      enabled: false, // Ensure the endpoint is defined
-    },
     queryKey: ['contacts'],
     getUrl: ENDPOINTS,
     filters: DEFAULT_FILTERS,
@@ -201,18 +204,15 @@ const Contacts = () => {
   // Update filters when changes
   useEffect(() => {
     const _getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
-    const searchValue = _getAllParams.search_value ?? '';
+    const searchValue = _getAllParams?.search_value ?? '';
 
     setFilters({
       ..._getAllParams,
       per_page: perPage,
       page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
-      search_fields: searchValue ? 'first_name,last_name' : undefined,
-      search_value: searchValue || undefined,
+      search_value: searchValue,
     });
-
-    refetch();
-  }, [currentPage, setFilters, perPage, searchParam, refetch]);
+  }, [currentPage, setFilters, perPage, searchParam]);
 
   const handleSearch = (e) => {
     updateParam('search_value', e.target.value);
@@ -246,7 +246,7 @@ const Contacts = () => {
           items={[
             {
               title: 'Datastore',
-              onClick: () => navigate('/datastores'),
+              onClick: () => navigate('/datastore'),
             },
             {
               title: 'Contacts',
@@ -309,7 +309,7 @@ const Contacts = () => {
             loading={isLoading}
             className={`${styles.customTable} striped-table`}
             // scroll={{ y: 55 * 10 }}
-            dataSource={initialData?.data ?? []}
+            dataSource={initialData?.results ?? []}
             rowKey={'id'}
             rowSelection={{
               preserveSelectedRowKeys: true,

@@ -2,14 +2,23 @@ import lodash from 'lodash';
 import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 
+// buatkan aku function untuk mentranlate search[name,code] -> search_fields=name,code&search_value=john
+// console.log('useDebouncedSearchParams =>', paramNameOrObject, params) hasil log useDebouncedSearchParams => search[name,code] URLSearchParams {size: 0}
+
 export function useDebouncedSearchParams(delay = 500) {
   const [searchParam, setSearchParams] = useSearchParams();
-
   const debouncedUpdate = useMemo(() => {
     return lodash.debounce((paramNameOrObject, value) => {
       setSearchParams((prev) => {
         const params = new URLSearchParams(prev);
 
+        console.log(
+          'useDebouncedSearchParams =>',
+          paramNameOrObject,
+          params,
+          Object.entries(paramNameOrObject),
+          value,
+        );
         if (!paramNameOrObject) {
           return new URLSearchParams();
         }

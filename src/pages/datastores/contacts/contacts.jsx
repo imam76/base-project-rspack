@@ -52,7 +52,7 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
   per_page: DEFAULT_PER_PAGE,
   page: DEFAULT_PAGE,
-  search_fields: 'first_name,code',
+  search_fields: 'first_name,last_name,code',
   includes: [
     'emails',
     'phones',
@@ -83,6 +83,10 @@ const columns = [
   {
     title: 'Email',
     render: (column) => column?.email ?? '-',
+  },
+  {
+    title: 'Phone',
+    render: (column) => column?.phone ?? '-',
   },
   {
     title: 'Status',

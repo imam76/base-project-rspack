@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await Api().get('/api/auth/me');
+      const response = await Api().get('/api/v1/auth/me');
 
       if (response.data.success && response.data.user) {
         const userData = response.data.user;
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await Api().post('/api/auth/logout');
+      await Api().post('/api/v1/auth/logout');
     } catch (error) {
       console.warn('Logout API call failed:', error);
     } finally {

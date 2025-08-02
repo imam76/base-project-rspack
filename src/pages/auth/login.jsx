@@ -1,3 +1,4 @@
+import { ENV, logger } from '@/config/env';
 import { useAuth } from '@/context/AuthContext';
 import { LoginFormSchema } from '@/schema';
 import {
@@ -26,6 +27,10 @@ const iconStyles = {
 const { Text } = Typography;
 
 export default () => {
+  // Log environment info
+  logger.log(`Running in ${ENV.VITE_APP_ENV} mode`);
+  logger.log(`API URL: ${ENV.VITE_API_BASE_URL}`);
+
   const { notification } = App.useApp();
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,7 +87,7 @@ export default () => {
     >
       <Card>
         <LoginForm
-          title="Accounting Manager"
+          title={ENV.VITE_APP_NAME}
           subTitle="Sign in to your account"
           onFinish={handleSubmit(onSubmit)}
           submitter={{

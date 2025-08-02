@@ -28,7 +28,7 @@ function AppWithNotification() {
 
   return (
     <AuthProvider>
-      <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />
+      <RouterProvider router={router} />
     </AuthProvider>
   );
 }

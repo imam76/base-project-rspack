@@ -18,5 +18,18 @@ export const LoginFormSchema = z.object({
   password: z
     .string()
     .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+    .min(8, 'Password must be at least 8 characters'),
+});
+
+// Register form schema (based on Rust DTO)
+export const RegisterFormSchema = z.object({
+  username: z
+    .string()
+    .min(1, 'Username is required')
+    .min(3, 'Username must be at least 3 characters long'),
+  email: z.string().min(1, 'Email is required').email('Invalid email format'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(8, 'Password must be at least 8 characters long'),
 });

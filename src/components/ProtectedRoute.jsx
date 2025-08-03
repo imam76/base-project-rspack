@@ -1,10 +1,10 @@
-import { useAuth } from '@/context/AuthContext';
+import { useAuthStore } from '@/stores';
 import { Spin } from 'antd';
 import { Navigate, useLocation } from 'react-router';
 
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+export default function ProtectedRoute({ children }) {
   const location = useLocation();
+  const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -23,10 +23,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     // Redirect to login page with return url
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
   return children;
-};
-
-export default ProtectedRoute;
+}

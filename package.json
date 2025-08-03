@@ -4,9 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vite build",
-    "build:prod": "vite build --mode production",
-    "dev": "vite dev --mode development",
-    "dev:local": "vite dev --mode local",
+    "dev": "vite dev",
+    "dev:sandbox": "vite dev --mode sandbox",
     "dev:prod": "vite dev --mode production",
     "lint": "biome check --write",
     "format": "biome format --write",

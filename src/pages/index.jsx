@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/AuthContext';
+import { useAuthStore } from '@/stores';
 import {
   AccountBookOutlined,
   LogoutOutlined,
@@ -21,7 +21,7 @@ const { Text } = Typography;
 
 const AppLayout = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
@@ -63,7 +63,7 @@ const AppLayout = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/auth/login');
   };
 
   const userMenuItems = [

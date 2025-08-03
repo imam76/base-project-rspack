@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/authStore';
 import axios from 'axios';
 import { showErrorNotification } from '../globalNotification';
 
@@ -21,7 +22,11 @@ const ERROR_MESSAGES = {
 const handleUnauthorized = () => {
   if (!isHandlingLogout) {
     isHandlingLogout = true;
-    localStorage.removeItem('userData');
+
+    // Clear auth store instead of localStorage directly
+    const { clearAuth } = useAuthStore.getState();
+    clearAuth();
+
     setTimeout(() => {
       isHandlingLogout = false;
     }, 100);
@@ -56,13 +61,29 @@ const showError = (message, description) => {
 };
 
 const Api = () => {
-  const instance = axios.create({
-    // headers: {
-    //   Authorization: 'Bearer YTBiYmU0ZDMtNjU4NS0zYTk2LWEzZmMtZDBlOTJiM2NlYWIw',
-    //   slug: 'devkebunbuahsupplier18042025250418190300-pg.zahironline.com',
-    // },
-  });
+  const instance = axios.create({});
 
+  // Request interceptor - get fresh auth state on every request
+  instance.interceptors.request.use(
+    (config) => {
+      // Get fresh auth state for each request
+      const authState = useAuthStore.getState();
+
+      // Set headers dynamically
+      if (authState?.user?.token) {
+        config.headers.Authorization = `Bearer ${authState.user.token}`;
+      }
+
+      if (authState?.currentWorkspace?.id) {
+        config.headers['X-Workspace-ID'] = authState.currentWorkspace.id;
+      }
+
+      return config;
+    },
+    (error) => Promise.reject(error),
+  );
+
+  // Response interceptor
   instance.interceptors.response.use(
     (response) => {
       return response;

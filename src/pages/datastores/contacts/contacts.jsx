@@ -315,7 +315,7 @@ const Contacts = () => {
             loading={isLoading}
             className={`${styles.customTable} striped-table`}
             // scroll={{ y: 55 * 10 }}
-            dataSource={initialData?.results ?? []}
+            dataSource={initialData?.results?.list ?? []}
             rowKey={'id'}
             rowSelection={{
               preserveSelectedRowKeys: true,

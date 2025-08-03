@@ -7,8 +7,12 @@ import reports from './reports/_reports';
 
 const router = createBrowserRouter([
   {
-    path: '/login',
+    path: '/auth/login',
     element: ReactLazyWithSuspense(() => import('@/pages/auth/login')),
+  },
+  {
+    path: '/auth/register',
+    element: ReactLazyWithSuspense(() => import('@/pages/auth/register')),
   },
   {
     path: '/',

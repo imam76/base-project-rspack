@@ -1,16 +1,17 @@
 import { ENV, logger } from '@/config/env';
-import { LoginFormSchema } from '@/schema';
+import { RegisterFormSchema } from '@/schema';
 import { useAuthStore } from '@/stores';
 import {
   FacebookOutlined,
   GithubOutlined,
   GoogleOutlined,
   LockOutlined,
+  MailOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { App, Card, Space, Typography } from 'antd';
+import { App, Card, Typography } from 'antd';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
@@ -19,8 +20,9 @@ const { Text } = Typography;
 
 // Constants
 const DEFAULT_CREDENTIALS = {
-  email: 'test@mailinator.com',
-  password: '123123',
+  username: ENV.IS_LOCAL ? 'testuser' : '',
+  email: ENV.IS_LOCAL ? 'test@mailinator.com' : '',
+  password: ENV.IS_LOCAL ? '12345678' : '',
 };
 
 const CONTAINER_STYLES = {
@@ -41,17 +43,15 @@ export default () => {
   const location = useLocation();
 
   // Zustand store
-  const { login, isAuthenticated, isLoading } = useAuthStore();
+  const { register, isAuthenticated, isLoading } = useAuthStore();
 
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(LoginFormSchema),
-    defaultValues: ENV.IS_LOCAL
-      ? DEFAULT_CREDENTIALS
-      : { email: '', password: '' },
+    resolver: zodResolver(RegisterFormSchema),
+    defaultValues: DEFAULT_CREDENTIALS,
   });
 
   // Redirect if already authenticated
@@ -64,27 +64,27 @@ export default () => {
 
   const onSubmit = async (data) => {
     try {
-      const result = await login(data.email, data.password);
+      const result = await register(data.username, data.email, data.password);
 
       if (result.success) {
         notification.success({
-          message: 'Login Successful',
-          description: 'Welcome back! Redirecting to dashboard.',
-          duration: 3,
+          message: 'Registration Successful',
+          description:
+            result.message || 'Account created successfully! Please login.',
+          duration: 4,
         });
 
-        const from = location.state?.from?.pathname || '/dashboard';
-        navigate(from, { replace: true });
+        navigate('/auth/login');
       } else {
         notification.error({
-          message: 'Login Failed',
+          message: 'Registration Failed',
           description: result.error,
         });
       }
     } catch (error) {
-      logger.error('Login submission error:', error);
+      logger.error('Registration submission error:', error);
       notification.error({
-        message: 'Login Failed',
+        message: 'Registration Failed',
         description: 'Something went wrong. Please try again.',
       });
     }
@@ -93,21 +93,21 @@ export default () => {
   // Components
   const SocialLoginActions = () => (
     <div className="flex flex-col items-center gap-1">
-      <Text type="secondary">Or sign in with</Text>
+      <Text type="secondary">Or sign up with</Text>
       <div className="flex gap-4">
-        <GoogleOutlined className="p-1 text-2xl text-gray-700 cursor-pointer transition-colors" />
-        <GithubOutlined className="p-1 text-2xl text-gray-700 cursor-pointer transition-colors" />
-        <FacebookOutlined className="p-1 text-2xl text-gray-700 cursor-pointer transition-colors" />
+        <GoogleOutlined className="p-1 text-2xl text-gray-700 cursor-pointer hover:text-red-500 transition-colors" />
+        <GithubOutlined className="p-1 text-2xl text-gray-700 cursor-pointer hover:text-gray-900 transition-colors" />
+        <FacebookOutlined className="p-1 text-2xl text-gray-700 cursor-pointer hover:text-blue-600 transition-colors" />
       </div>
     </div>
   );
 
-  const SignUpPrompt = () => (
+  const SignInPrompt = () => (
     <div className="text-center py-2">
       <Text type="secondary" className="text-xs">
-        Don't have an account?{' '}
-        <Link to="/auth/register" className="text-blue-600 hover:text-blue-800">
-          Sign Up
+        Already have an account?{' '}
+        <Link to="/auth/login" className="text-blue-600 hover:text-blue-800">
+          Sign In
         </Link>
       </Text>
     </div>
@@ -118,7 +118,7 @@ export default () => {
       <Card>
         <LoginForm
           title={ENV.VITE_APP_NAME}
-          subTitle="Sign in to your account"
+          subTitle="Create your account"
           onFinish={handleSubmit(onSubmit)}
           submitter={{
             submitButtonProps: {
@@ -126,11 +126,33 @@ export default () => {
               loading: isSubmitting || isLoading,
             },
             searchConfig: {
-              submitText: 'Sign In',
+              submitText: 'Sign Up',
             },
           }}
           actions={<SocialLoginActions />}
         >
+          <Controller
+            name="username"
+            control={control}
+            render={({ field }) => (
+              <ProFormText
+                {...field}
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className="prefixIcon" />,
+                }}
+                placeholder="Username (min 3 characters)"
+                validateStatus={errors.username && 'error'}
+                extra={
+                  errors?.username?.message && (
+                    <Text className="text-xs text-red-500">
+                      {errors.username.message}
+                    </Text>
+                  )
+                }
+              />
+            )}
+          />
           <Controller
             name="email"
             control={control}
@@ -139,7 +161,7 @@ export default () => {
                 {...field}
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined className="prefixIcon" />,
+                  prefix: <MailOutlined className="prefixIcon" />,
                 }}
                 placeholder="Email"
                 validateStatus={errors.email && 'error'}
@@ -163,7 +185,7 @@ export default () => {
                   size: 'large',
                   prefix: <LockOutlined className="prefixIcon" />,
                 }}
-                placeholder="Password"
+                placeholder="Password (min 8 characters)"
                 validateStatus={errors.password && 'error'}
                 extra={
                   errors?.password?.message && (
@@ -175,7 +197,7 @@ export default () => {
               />
             )}
           />
-          <SignUpPrompt />
+          <SignInPrompt />
         </LoginForm>
       </Card>
     </div>

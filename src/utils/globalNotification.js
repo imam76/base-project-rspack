@@ -18,42 +18,55 @@ export const setGlobalNotificationApi = (notificationApi) => {
  * Show success notification globally
  */
 export const showSuccessNotification = (config) => {
-  if (globalNotificationApi) {
-    globalNotificationApi.success(config);
-  } else {
-    console.warn('Global notification API not initialized');
-  }
+  // Use setTimeout to avoid React 18 concurrent mode warning
+  setTimeout(() => {
+    if (globalNotificationApi) {
+      globalNotificationApi.success(config);
+    } else {
+      console.warn('Global notification API not initialized');
+    }
+  }, 0);
 };
 
 /**
  * Show error notification globally
  */
 export const showErrorNotification = (config) => {
-  if (globalNotificationApi) {
-    globalNotificationApi.error(config);
-  } else {
-    console.warn('Global notification API not initialized');
-  }
+  // Use setTimeout to avoid React 18 concurrent mode warning
+  // This moves the notification call out of the render cycle
+  setTimeout(() => {
+    if (globalNotificationApi) {
+      globalNotificationApi.error(config);
+    } else {
+      console.warn('Global notification API not initialized');
+    }
+  }, 0);
 };
 
 /**
  * Show info notification globally
  */
 export const showInfoNotification = (config) => {
-  if (globalNotificationApi) {
-    globalNotificationApi.info(config);
-  } else {
-    console.warn('Global notification API not initialized');
-  }
+  // Use setTimeout to avoid React 18 concurrent mode warning
+  setTimeout(() => {
+    if (globalNotificationApi) {
+      globalNotificationApi.info(config);
+    } else {
+      console.warn('Global notification API not initialized');
+    }
+  }, 0);
 };
 
 /**
  * Show warning notification globally
  */
 export const showWarningNotification = (config) => {
-  if (globalNotificationApi) {
-    globalNotificationApi.warning(config);
-  } else {
-    console.warn('Global notification API not initialized');
-  }
+  // Use setTimeout to avoid React 18 concurrent mode warning
+  setTimeout(() => {
+    if (globalNotificationApi) {
+      globalNotificationApi.warning(config);
+    } else {
+      console.warn('Global notification API not initialized');
+    }
+  }, 0);
 };

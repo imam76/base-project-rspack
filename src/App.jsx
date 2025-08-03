@@ -1,4 +1,3 @@
-import { AuthProvider } from '@/context/AuthContext';
 import { setGlobalNotificationApi } from '@/utils/globalNotification';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntdApp, ConfigProvider } from 'antd';
@@ -26,11 +25,7 @@ function AppWithNotification() {
     setGlobalNotificationApi(notification);
   }, [notification]);
 
-  return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default function App() {

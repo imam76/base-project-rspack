@@ -2,6 +2,10 @@ import { ENV, logger } from '@/config/env';
 import { RegisterFormSchema } from '@/schema';
 import { useAuthStore } from '@/stores';
 import {
+  showErrorNotification,
+  showSuccessNotification,
+} from '@/utils/globalNotification';
+import {
   FacebookOutlined,
   GithubOutlined,
   GoogleOutlined,
@@ -11,7 +15,7 @@ import {
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { App, Card, Typography } from 'antd';
+import { Card, Typography } from 'antd';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
@@ -38,7 +42,6 @@ export default () => {
   logger.log(`Running in ${ENV.VITE_APP_ENV} mode`);
   logger.log(`API URL: ${ENV.VITE_API_BASE_URL}`);
 
-  const { notification } = App.useApp();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -67,23 +70,23 @@ export default () => {
       const result = await register(data.username, data.email, data.password);
 
       if (result.success) {
-        notification.success({
+        showSuccessNotification({
           message: 'Registration Successful',
           description:
             result.message || 'Account created successfully! Please login.',
-          duration: 4,
+          duration: 3,
         });
 
         navigate('/auth/login');
       } else {
-        notification.error({
+        showErrorNotification({
           message: 'Registration Failed',
           description: result.error,
         });
       }
     } catch (error) {
       logger.error('Registration submission error:', error);
-      notification.error({
+      showErrorNotification({
         message: 'Registration Failed',
         description: 'Something went wrong. Please try again.',
       });

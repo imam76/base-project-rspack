@@ -153,7 +153,7 @@ export const useAuthStore = create(
       },
 
       checkAuthStatus: async () => {
-        const { isLoading, user, currentWorkspace } = get();
+        const { isLoading, user, lastWorkspaceId } = get();
 
         // Prevent race conditions
         if (isLoading) {
@@ -163,11 +163,12 @@ export const useAuthStore = create(
 
         try {
           set({ isLoading: true });
+          logger.log('Current workspace before auth check =>', lastWorkspaceId);
 
           const response = await Api().get('/api/v1/auth/me', {
             headers: {
               Authorization: user?.token ? `Bearer ${user.token}` : '',
-              'X-Workspace-ID': currentWorkspace?.id || '',
+              'X-Workspace-ID': lastWorkspaceId || '',
             },
           });
 
@@ -177,18 +178,31 @@ export const useAuthStore = create(
             throw new Error('Not authenticated');
           }
 
+          // Workspace selection logic
+          const availableWorkspaces = data.workspace || [];
+          const selectedWorkspace = selectDefaultWorkspace(
+            availableWorkspaces,
+            lastWorkspaceId,
+          );
+
           // Build user data
-          const userData = buildUserData(data.user, data.workspace, data.token);
+          const userData = buildUserData(
+            data.user,
+            data.workspace,
+            user?.token,
+          );
 
           // Update state
           set({
             user: userData,
+            currentWorkspace: selectedWorkspace,
             isAuthenticated: true,
             isLoading: false,
           });
 
           // Logging
           logger.log('Auth check successful =>', data);
+          logger.log('Current workspace after auth check =>', lastWorkspaceId);
 
           return userData;
         } catch (error) {

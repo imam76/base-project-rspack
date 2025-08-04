@@ -37,10 +37,8 @@ const AuthInitializer = ({ children }) => {
     return (
       <div className="h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4">
-            {''}
-          </div>
-          <p className="text-xl font-semibold text-gray-700 animate-pulse">
+          <Spin size="large" />
+          <p className="text-xl font-semibold text-gray-700 animate-pulse mt-4">
             Loading...
           </p>
         </div>

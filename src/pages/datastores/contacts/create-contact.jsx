@@ -35,6 +35,9 @@ const CreateContact = () => {
     queryKey: ['contacts'],
     getUrl: endpoints,
     method: 'POST',
+    queryOptions: {
+      enabled: false, // Disable initial fetch
+    },
     submitUrl: endpoints,
     onSuccess: () => {
       notification.success({

@@ -125,9 +125,9 @@ const columns = [
     width: 50,
     render: (_, record) => (
       <ContextMenuOption
-        editPath={`/edit/${record.id}`}
-        detailPath={`/detail/${record.id}`}
-        deletePath={`/delete/${record.id}`}
+        editPath={`/datastores/contacts/edit/${record.id}`}
+        detailPath={`/datastores/contacts/detail/${record.id}`}
+        deletePath={`/datastores/contacts/delete/${record.id}`}
       >
         <Button
           variant="text"

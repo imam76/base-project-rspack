@@ -7,7 +7,7 @@ const { Option } = Select;
 
 export default function SelectWithReactQuery({
   // Query Configuration
-  url = '/api/v2/contacts', // Default URL, can be overridden
+  url = '/api/v1/contacts', // Default URL, can be overridden
   queryKey,
   customFetcher, // Required: your axios service function
   debounceMs = 300,

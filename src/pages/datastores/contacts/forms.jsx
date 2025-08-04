@@ -1,5 +1,6 @@
 import {
   ProForm,
+  ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
@@ -10,8 +11,6 @@ import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import proStyle from '@/styles/proComponentStyle';
-import { Space } from 'antd';
-import { Checkbox } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -51,6 +50,34 @@ const Forms = ({
           <Title level={3}>{title}</Title>
         </Flex>
         <Row gutter={[16]}>
+          <Col xs={24} md={24} lg={6}>
+            <Controller
+              name="code"
+              control={control}
+              render={(form) => (
+                <div>
+                  <ProFormText
+                    {...form.field}
+                    label="Code"
+                    placeholder={''}
+                    validateStatus={errors.code && 'error'}
+                    extra={
+                      <Text style={{ fontSize: 12 }} type="danger">
+                        {errors?.code?.message}
+                      </Text>
+                    }
+                    labelCol={{
+                      style: {
+                        //ant-form-item-label padding
+                        paddingBottom:
+                          proStyle.ProFormText.labelCol.style.padding,
+                      },
+                    }}
+                  />
+                </div>
+              )}
+            />
+          </Col>
           <Col xs={24} md={24} lg={6}>
             <Controller
               name="name"
@@ -109,14 +136,54 @@ const Forms = ({
           </Col>
           <Col xs={24} md={24} lg={6}>
             <Controller
-              name="phone"
+              name="position"
               control={control}
               render={(form) => (
                 <div>
                   <ProFormText
                     {...form.field}
-                    label="Phone"
+                    label="Position"
                     placeholder={''}
+                    validateStatus={errors.position && 'error'}
+                    extra={
+                      <Text style={{ fontSize: 12 }} type="danger">
+                        {errors?.position?.message}
+                      </Text>
+                    }
+                    labelCol={{
+                      style: {
+                        //ant-form-item-label padding
+                        paddingBottom:
+                          proStyle.ProFormText.labelCol.style.padding,
+                      },
+                    }}
+                  />
+                </div>
+              )}
+            />
+          </Col>
+          <Col xs={24} md={24} lg={6}>
+            <Controller
+              name="contact_type"
+              control={control}
+              render={(form) => (
+                <div>
+                  <ProFormSelect
+                    {...form.field}
+                    label="Contact Type"
+                    placeholder="Select contact type"
+                    validateStatus={errors.contact_type && 'error'}
+                    extra={
+                      <Text style={{ fontSize: 12 }} type="danger">
+                        {errors?.contact_type?.message}
+                      </Text>
+                    }
+                    options={[
+                      { label: 'Customer', value: 'customer' },
+                      { label: 'Supplier', value: 'supplier' },
+                      { label: 'Employee', value: 'employee' },
+                      { label: 'Salesman', value: 'salesman' },
+                    ]}
                     labelCol={{
                       style: {
                         //ant-form-item-label padding
@@ -156,52 +223,6 @@ const Forms = ({
                 </div>
               )}
             />
-          </Col>
-          <Col xs={24} md={24} lg={12}>
-            <div className="mb-16">
-              <Space size={'small'}>
-                <Controller
-                  name="is_customer"
-                  control={control}
-                  disabled={isDetail}
-                  render={(form) => (
-                    <Checkbox {...form.field} checked={form?.field?.value}>
-                      Customer
-                    </Checkbox>
-                  )}
-                />
-                <Controller
-                  name="is_supplier"
-                  control={control}
-                  disabled={isDetail}
-                  render={(form) => (
-                    <Checkbox {...form.field} checked={form?.field?.value}>
-                      Supplier
-                    </Checkbox>
-                  )}
-                />
-                <Controller
-                  name="is_employee"
-                  control={control}
-                  disabled={isDetail}
-                  render={(form) => (
-                    <Checkbox {...form.field} checked={form?.field?.value}>
-                      Employee
-                    </Checkbox>
-                  )}
-                />
-                <Controller
-                  name="is_salesman"
-                  control={control}
-                  disabled={isDetail}
-                  render={(form) => (
-                    <Checkbox {...form.field} checked={form?.field?.value}>
-                      Salesman
-                    </Checkbox>
-                  )}
-                />
-              </Space>
-            </div>
           </Col>
         </Row>
       </ProForm>

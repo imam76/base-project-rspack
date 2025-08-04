@@ -21,15 +21,16 @@ const CreateContact = () => {
   } = useForm({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
+      code: '',
       name: '',
       email: '',
-      phone: '',
-      npwp: '',
+      position: '',
+      contact_type: '',
       address: '',
     },
   });
 
-  const endpoints = '/api/v2/contacts';
+  const endpoints = '/api/v1/contacts';
 
   const { isSubmitting, submit } = useDataQuery({
     queryKey: ['contacts'],
@@ -71,6 +72,7 @@ const CreateContact = () => {
   });
 
   const onSubmit = (data) => {
+    console.info('Submitting data =>', data);
     submit(data);
   };
 

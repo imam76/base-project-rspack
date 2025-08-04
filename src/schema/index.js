@@ -2,13 +2,12 @@ import * as z from 'zod';
 
 export const ContactFormSchema = z
   .object({
-    name: z.string().min(4),
-    email: z
-      .string()
-      .email('Invalid email. Please enter a valid email address'),
-    phone: z.string(),
-    npwp: z.string(),
-    address: z.string(),
+    code: z.string().min(1, 'Code is required'),
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email format'),
+    position: z.string().min(1, 'Position is required'),
+    contact_type: z.string().min(1, 'Contact type is required'),
+    address: z.string().optional(),
   })
   .passthrough();
 

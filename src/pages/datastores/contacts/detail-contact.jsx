@@ -19,8 +19,8 @@ const DetailContact = () => {
 
   const endpoints =
     id && typeof id === 'string' && id.trim() !== ''
-      ? `/api/v2/contacts/${id}`
-      : '/api/v2/contacts';
+      ? `/api/v1/contacts/${id}`
+      : '/api/v1/contacts';
 
   const { initialData, isLoading, isSubmitting, submit } = useDataQuery({
     queryKey: ['contacts'],
@@ -54,10 +54,11 @@ const DetailContact = () => {
   } = useForm({
     resolver: zodResolver(ContactFormSchema),
     defaultValues: {
+      code: '',
       name: '',
       email: '',
-      phone: '',
-      npwp: '',
+      position: '',
+      contact_type: '',
       address: '',
     },
   });
@@ -65,26 +66,18 @@ const DetailContact = () => {
   useEffect(() => {
     if (initialData) {
       reset({
-        ...initialData,
-        name: initialData.name,
-        email: initialData.emails[0]?.value || '',
-        phone: initialData.phones[0]?.value || '',
-        npwp: initialData.npwp || '',
-        address: initialData.addresses[0]?.address || '',
+        code: initialData.code || '',
+        name: initialData.name || '',
+        email: initialData.email || '',
+        position: initialData.position || '',
+        contact_type: initialData.type || '',
+        address: initialData.address || '',
       });
     }
   }, [initialData, reset]);
 
   const onSubmit = (data) => {
-    const body = {
-      ...data,
-      emails: [{ value: data.email }],
-      phones: [{ value: data.phone }],
-      npwp: initialData.npwp || '',
-      addresses: [{ address: data.address }],
-      reason: 'Update contact information',
-    };
-    submit(body);
+    submit(data);
   };
 
   if (isLoading) {

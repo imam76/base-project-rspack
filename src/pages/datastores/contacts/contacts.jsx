@@ -68,25 +68,43 @@ const DEFAULT_FILTERS = {
 // setting table columns
 const columns = [
   {
-    // contoh value jika gak ada default value / fallback
-    title: 'Name',
-    width: 200,
-    render: (column) => column?.full_name ?? '-',
-  },
-  {
-    // contoh value jika gak ada default value / fallback
     title: 'Code',
     dataIndex: 'code',
     key: 'code',
     width: 100,
   },
   {
-    title: 'Email',
-    render: (column) => column?.email ?? '-',
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    width: 200,
   },
   {
-    title: 'Phone',
-    render: (column) => column?.phone ?? '-',
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
+    render: (email) => email ?? '-',
+  },
+  {
+    title: 'Position',
+    dataIndex: 'position',
+    key: 'position',
+    render: (position) => position ?? '-',
+  },
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+    width: 120,
+    render: (type) => {
+      const typeColors = {
+        customer: 'blue',
+        supplier: 'green',
+        employee: 'orange',
+        salesman: 'purple',
+      };
+      return renderTags(type, { tags: [type], color: typeColors[type] });
+    },
   },
   {
     title: 'Status',
@@ -193,12 +211,7 @@ const Contacts = () => {
 
   const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
   const hasActiveFilters = Object.keys(getAllParams).length > 0;
-  console.info(
-    'getAllParams =>',
-    searchParam,
-    searchParam.entries(),
-    getAllParams,
-  );
+
   const { initialData, isLoading, refetch, setFilters } = useDataQuery({
     queryKey: ['contacts'],
     getUrl: ENDPOINTS,

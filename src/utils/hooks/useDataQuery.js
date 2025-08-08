@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import Api from '../axios/api';
+import { showErrorNotification } from '../globalNotification';
 
 /**
  * Builds a URL with query parameters
@@ -114,6 +115,13 @@ export function useDataQuery({
         return transformResponse(res.data);
       } catch (error) {
         console.error('Error fetching data:', error);
+
+        // Show error notification
+        showErrorNotification({
+          message: 'Failed to load data',
+          description: error?.response?.data?.message || error.message,
+        });
+
         throw error;
       }
     },
@@ -136,6 +144,13 @@ export function useDataQuery({
         return transformResponse(res.data);
       } catch (error) {
         setSubmitError(error);
+
+        // Show error notification
+        showErrorNotification({
+          message: 'Submission Failed',
+          description: error?.response?.data?.message || error.message,
+        });
+
         throw error;
       } finally {
         setIsSubmitting(false);

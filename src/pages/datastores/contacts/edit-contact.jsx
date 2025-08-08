@@ -17,13 +17,10 @@ const EditContact = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const endpoints =
-    id && typeof id === 'string' && id.trim() !== ''
-      ? `/api/v1/contacts/${id}`
-      : '/api/v1/contacts';
+  const endpoints = `/api/v1/contacts/${id}`;
 
   const { initialData, isLoading, isSubmitting, submit } = useDataQuery({
-    queryKey: ['contacts'],
+    queryKey: ['contacts', endpoints],
     getUrl: endpoints,
     method: 'PUT', // Use PUT for updating existing contact
     submitUrl: endpoints,
@@ -65,13 +62,16 @@ const EditContact = () => {
 
   useEffect(() => {
     if (initialData) {
+      console.info('Initial data loaded:', initialData);
+      const { code, name, email, position, contact_type, address } =
+        initialData?.results || {};
       reset({
-        code: initialData.code || '',
-        name: initialData.name || '',
-        email: initialData.email || '',
-        position: initialData.position || '',
-        contact_type: initialData.type || '',
-        address: initialData.address || '',
+        code: code || '',
+        name: name || '',
+        email: email || '',
+        position: position || '',
+        contact_type: contact_type || '',
+        address: address || '',
       });
     }
   }, [initialData, reset]);

@@ -16,7 +16,7 @@ import {
   RefreshCcw,
 } from 'lucide-react';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 
 import ContextMenuOption from '@/blocs/ContextMenuOption';
@@ -188,20 +188,26 @@ const renderFilterButton = (hasActiveFilters, clearAllParams, navigate) => {
 const Contacts = () => {
   const navigate = useNavigate();
   const { styles } = useStyle();
-  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState([]);
   const { searchParam, updateParam, clearAllParams } =
-    useDebouncedSearchParams(800); // bisa ganti delay
+    useDebouncedSearchParams(600);
+
+  const allParams = Object.fromEntries(searchParam.entries());
+  const currentPage = Number.parseInt(allParams.page, 10) || DEFAULT_PAGE;
+  const perPage = Number.parseInt(allParams.per_page, 10) || DEFAULT_PER_PAGE;
+  const searchValue = allParams.search || '';
+
+  const currentFilters = {
+    ...DEFAULT_FILTERS,
+    ...allParams,
+    page: currentPage,
+    per_page: perPage,
+  };
+
+  const hasActiveFilters = Object.keys(allParams).length > 0;
   const { exportToCSV, isExporting } = useExportCSV({
     endpoint: ENDPOINTS,
-    selectedKeys: [
-      'id',
-      'name',
-      'code',
-      'emails.0.value', // Nested array access
-      'phones.0.value',
-    ],
+    selectedKeys: ['id', 'name', 'code', 'emails.0.value', 'phones.0.value'],
     filename: `contacts_${moment().format('YYYY-MM-DD')}`,
     defaultParams: {
       is_skip_pagination: true,
@@ -209,49 +215,28 @@ const Contacts = () => {
     },
   });
 
-  const getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
-  const hasActiveFilters = Object.keys(getAllParams).length > 0;
-
-  const { initialData, isLoading, refetch, setFilters } = useDataQuery({
+  const { initialData, isLoading, refetch } = useDataQuery({
     queryKey: ['contacts'],
     getUrl: ENDPOINTS,
-    filters: DEFAULT_FILTERS,
+    filters: currentFilters,
   });
 
-  // Update filters when changes
-  useEffect(() => {
-    const _getAllParams = Object.fromEntries(searchParam.entries()) ?? {};
-    // bisa juga pake ini 'search[name,code]' tergantung dari backend
-    // const searchValue = _getAllParams['search[name,code]'] ?? '';
-    const searchValue = _getAllParams?.search ?? '';
-
-    setFilters({
-      ..._getAllParams,
-      per_page: perPage,
-      page: searchValue ? 1 : currentPage, // reset page to 1 if searchValue is present
-      search: searchValue,
-    });
-  }, [currentPage, setFilters, perPage, searchParam]);
-
   const handleSearch = (e) => {
-    updateParam('search', e.target.value);
+    updateParam({ search: e.target.value, page: 1 });
   };
 
-  const onShowSizeChange = (_, perPage) => {
-    setPerPage(perPage);
+  const onShowSizeChange = (_, newPerPage) => {
+    updateParam({ per_page: newPerPage, page: 1 });
   };
 
-  // Function to handle row selection
   const handleSelectRow = (selectedRowKeys, selectedRows) => {
     console.info('selectedRowKeys =>', selectedRowKeys);
     console.info('selectedRows =>', selectedRows);
-
     setSelectedRow(selectedRowKeys);
   };
 
-  // Function to handle page change
   const onChange = (page) => {
-    setCurrentPage(page);
+    updateParam('page', page);
   };
 
   return (
@@ -277,6 +262,7 @@ const Contacts = () => {
           placeholder="Search"
           color="primary"
           onChange={handleSearch}
+          defaultValue={searchValue}
           style={{
             width: 300,
           }}

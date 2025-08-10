@@ -1,29 +1,15 @@
 import lodash from 'lodash';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
-
-// buatkan aku function untuk mentranlate search[name,code] -> search_fields=name,code&search_value=john
-// console.log('useDebouncedSearchParams =>', paramNameOrObject, params) hasil log useDebouncedSearchParams => search[name,code] URLSearchParams {size: 0}
 
 export function useDebouncedSearchParams(delay = 500) {
   const [searchParam, setSearchParams] = useSearchParams();
+
   const debouncedUpdate = useMemo(() => {
     return lodash.debounce((paramNameOrObject, value) => {
       setSearchParams((prev) => {
         const params = new URLSearchParams(prev);
 
-        console.log(
-          'useDebouncedSearchParams =>',
-          paramNameOrObject,
-          params,
-          Object.entries(paramNameOrObject),
-          value,
-        );
-        if (!paramNameOrObject) {
-          return new URLSearchParams();
-        }
-
-        // Jika parameter pertama adalah object
         if (
           typeof paramNameOrObject === 'object' &&
           paramNameOrObject !== null
@@ -35,9 +21,7 @@ export function useDebouncedSearchParams(delay = 500) {
               params.set(key, String(val));
             }
           }
-        }
-        // Jika parameter pertama adalah string (cara lama)
-        else if (typeof paramNameOrObject === 'string') {
+        } else if (typeof paramNameOrObject === 'string') {
           if (value === null || value === '' || value === undefined) {
             params.delete(paramNameOrObject);
           } else {
@@ -50,20 +34,23 @@ export function useDebouncedSearchParams(delay = 500) {
     }, delay);
   }, [setSearchParams, delay]);
 
+  const immediateUpdate = useCallback(() => {
+    setSearchParams(new URLSearchParams());
+  }, [setSearchParams]);
+
   useEffect(() => {
     return () => {
       debouncedUpdate.cancel();
     };
   }, [debouncedUpdate]);
 
-  // Cara pakai: updateParam("search", "kopi") || updateParam({ search: "kopi", page: 1 })
   const updateParam = (paramName, value) => {
     debouncedUpdate(paramName, value);
   };
 
-  // Method untuk clear semua params
   const clearAllParams = () => {
-    updateParam();
+    debouncedUpdate.cancel();
+    immediateUpdate();
   };
 
   return { searchParam, updateParam, clearAllParams };

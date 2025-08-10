@@ -1,38 +1,56 @@
-import SelectWithReactQuery from '@/components/SelectWithReactQuery';
-import { fetchSelect } from '@/utils/services/fetchSelect';
 import { ProForm } from '@ant-design/pro-components';
-import { Col, Modal, Row, Typography } from 'antd';
+import { Col, DatePicker, Modal, Row, Select, Typography } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 const { Title } = Typography;
 
+const OPTIONS_STATUS = [
+  { label: 'Active', value: true },
+  { label: 'Inactive', value: false },
+];
+
+const OPTIONS_CONTACT_TYPE = [
+  { label: 'Salesman', value: 'salesman' },
+  { label: 'Employee', value: 'employee' },
+  { label: 'Supplier', value: 'supplier' },
+  { label: 'Customer', value: 'customer' },
+];
+
 export default function FilterContact() {
   const navigate = useNavigate();
 
   const {
-    // register,
     handleSubmit,
-    // getValues,
     control,
     formState: { isSubmitting, isLoading },
   } = useForm({
     defaultValues: {
-      classification: null,
-      currency: null,
+      contact_type: null,
+      is_active: null,
+      created_at: null,
     },
   });
 
   const handleClose = () => {
-    navigate(-1); // Kembali ke halaman sebelumnya
+    navigate(-1);
   };
 
   const onSubmit = (data) => {
-    // Proses data filter di sini
-    const filterParams = {
-      'classification[id]': data.classification.value,
-      'currency[id]': data.currency.value,
-    };
+    const filterParams = {};
+
+    if (data.contact_type) {
+      filterParams.contact_type = data.contact_type;
+    }
+
+    if (data.is_active !== null) {
+      filterParams.is_active = data.is_active;
+    }
+
+    if (data.created_at) {
+      filterParams.created_at = data.created_at.format('YYYY-MM-DD');
+    }
+
     const queryParams = new URLSearchParams(filterParams).toString();
     navigate(`/datastores/contacts/list?${queryParams}`, { replace: true });
   };
@@ -59,39 +77,47 @@ export default function FilterContact() {
         <Row gutter={[16, 16]} className="mb-4">
           <Col xs={24}>
             <Controller
-              name="classification"
+              name="contact_type"
               control={control}
-              render={(form) => (
-                <div>
-                  <SelectWithReactQuery
-                    {...form.field}
-                    url="/api/v2/contact_classifications"
-                    queryKey={['contacts', '']}
-                    placeholder="Select classification"
-                    customFetcher={fetchSelect}
-                    labelKey="name"
-                    valueKey="id"
-                  />
-                </div>
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  placeholder="Select contact type"
+                  allowClear
+                  style={{ width: '100%' }}
+                  options={OPTIONS_CONTACT_TYPE}
+                />
               )}
             />
           </Col>
+
           <Col xs={24}>
             <Controller
-              name="currency"
+              name="is_active"
               control={control}
-              render={(form) => (
-                <div>
-                  <SelectWithReactQuery
-                    {...form.field}
-                    url="/api/v2/currencies"
-                    queryKey={['currency', '']}
-                    placeholder="Select currency"
-                    customFetcher={fetchSelect}
-                    labelKey="symbol"
-                    valueKey="id"
-                  />
-                </div>
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  placeholder="Select status"
+                  allowClear
+                  style={{ width: '100%' }}
+                  options={OPTIONS_STATUS}
+                />
+              )}
+            />
+          </Col>
+
+          <Col xs={24}>
+            <Controller
+              name="created_at"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  placeholder="Select date"
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                />
               )}
             />
           </Col>

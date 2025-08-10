@@ -80,15 +80,12 @@ export function useDataQuery({
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
-  const [queryParams, setQueryParams] = useState(filters);
 
-  // Build the complete URL with filters
-  const fullGetUrl = getUrl ? buildUrl(getUrl, queryParams) : null;
+  const fullGetUrl = getUrl ? buildUrl(getUrl, filters) : null;
 
-  // If filters change, update the queryKey to trigger refetch
   const effectiveQueryKey = [...queryKey];
-  if (Object.keys(queryParams).length > 0) {
-    effectiveQueryKey.push({ filters: queryParams });
+  if (Object.keys(filters).length > 0) {
+    effectiveQueryKey.push({ filters });
   }
 
   // Load data if getUrl is provided
@@ -180,61 +177,32 @@ export function useDataQuery({
     [mutation],
   );
 
-  // Update filters for data fetching
-  const setFilters = useCallback((newFilters) => {
-    setQueryParams((prev) => ({
-      ...prev,
-      ...newFilters,
-    }));
-  }, []);
-
-  // Clear any submission errors
   const clearErrors = useCallback(() => {
     setSubmitError(null);
   }, []);
 
-  // Reset the form state
   const reset = useCallback(() => {
     clearErrors();
-    // If getUrl exists, refetch the initial data
     if (fullGetUrl) {
       refetch();
     }
   }, [clearErrors, fullGetUrl, refetch]);
 
-  // Reset filters
-  const clearFilters = useCallback(() => {
-    setQueryParams({});
-  }, []);
-
   return {
-    // Data states
     initialData,
     isLoading,
-
-    // Filter handling
-    filters: queryParams,
-    setFilters,
-    clearFilters,
-
-    // Error handling
+    filters,
     fetchError,
     submitError,
     error: submitError || fetchError,
     isFetchError,
     hasError: Boolean(submitError || fetchError),
     clearErrors,
-
-    // Submission states
     isSubmitting,
     isSuccess: mutation.isSuccess,
-
-    // Actions
     submit,
     refetch,
     reset,
-
-    // Raw values for advanced usage
     mutation,
     fullUrl: fullGetUrl,
     queryResult: {

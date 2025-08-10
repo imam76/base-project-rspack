@@ -4,13 +4,14 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Card, Col, Row } from 'antd';
+import { Button, Card, Col, Row } from 'antd';
 import { Flex } from 'antd';
 import { Typography } from 'antd';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import proStyle from '@/styles/proComponentStyle';
+import { LucideDownload } from 'lucide-react';
 
 const { Title, Text } = Typography;
 
@@ -48,6 +49,10 @@ const Forms = ({
       >
         <Flex justify="space-between">
           <Title level={3}>{title}</Title>
+          <Button variant="outlined" color="primary">
+            <LucideDownload size={16} />
+            Import From CSV
+          </Button>
         </Flex>
         <Row gutter={[16]}>
           <Col xs={24} md={24} lg={6}>

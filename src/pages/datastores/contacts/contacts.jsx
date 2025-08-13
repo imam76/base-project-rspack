@@ -50,19 +50,8 @@ const ENDPOINTS = '/api/v1/contacts';
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_PAGE = 1;
 const DEFAULT_FILTERS = {
-  per_page: DEFAULT_PER_PAGE,
+  limit: DEFAULT_PER_PAGE,
   page: DEFAULT_PAGE,
-  search_fields: 'first_name,last_name,code',
-  includes: [
-    'emails',
-    'phones',
-    'other_fields',
-    'addresses',
-    'contact_persons',
-    'restricted_departments',
-    'restricted_contacts',
-    'bank_accounts',
-  ],
 };
 
 // setting table columns
@@ -194,14 +183,12 @@ const Contacts = () => {
 
   const allParams = Object.fromEntries(searchParam.entries());
   const currentPage = Number.parseInt(allParams.page, 10) || DEFAULT_PAGE;
-  const perPage = Number.parseInt(allParams.per_page, 10) || DEFAULT_PER_PAGE;
+  const limit = Number.parseInt(allParams.limit, 10) || DEFAULT_PER_PAGE;
   const searchValue = allParams.search || '';
 
   const currentFilters = {
     ...DEFAULT_FILTERS,
     ...allParams,
-    page: currentPage,
-    per_page: perPage,
   };
 
   const hasActiveFilters = Object.keys(allParams).length > 0;
@@ -211,7 +198,7 @@ const Contacts = () => {
     filename: `contacts_${moment().format('YYYY-MM-DD')}`,
     defaultParams: {
       is_skip_pagination: true,
-      [`includes[${DEFAULT_FILTERS.includes.join(',')}]`]: true,
+      // [`includes[${DEFAULT_FILTERS?.includes?.join(',')}]`]: true,
     },
   });
 
@@ -226,7 +213,7 @@ const Contacts = () => {
   };
 
   const onShowSizeChange = (_, newPerPage) => {
-    updateParam({ per_page: newPerPage, page: 1 });
+    updateParam({ limit: newPerPage, page: 1 });
   };
 
   const handleSelectRow = (selectedRowKeys, selectedRows) => {
@@ -333,7 +320,7 @@ const Contacts = () => {
               showSizeChanger: true,
               onShowSizeChange: onShowSizeChange,
               defaultPageSize: DEFAULT_PER_PAGE,
-              pageSize: perPage,
+              pageSize: limit,
               total: initialData?.count ?? 0,
               position: ['bottomLeft'],
               size: 'default',

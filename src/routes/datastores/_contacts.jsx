@@ -1,3 +1,5 @@
+import Api from '@/utils/axios/api';
+import { showErrorNotification } from '@/utils/globalNotification';
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import { redirect } from 'react-router';
 
@@ -44,6 +46,19 @@ const routes = [
           async () =>
             await import('@/pages/datastores/contacts/detail-contact'),
         ),
+      },
+      {
+        path: 'delete/:id',
+        action: async ({ params }) => {
+          const { id } = params;
+          try {
+            await Api().delete(`/api/v1/contacts/${id}`);
+            return redirect('/datastores/contacts/list');
+          } catch (error) {
+            console.error('Error deleting contact:', error);
+            return redirect('/datastores/contacts/list');
+          }
+        },
       },
       {
         path: '*',

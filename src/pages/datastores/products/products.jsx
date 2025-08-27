@@ -54,6 +54,16 @@ const DEFAULT_FILTERS = {
   page: DEFAULT_PAGE,
 };
 
+// mobile view
+const expandedRowRender = (record) => (
+  <div style={{ padding: '8px', borderTop: '1px solid #f0f0f0' }}>
+    <p>code: {record.code}</p>
+    <p>name: {record.name}</p>
+    <p>selling price: {record.selling_price}</p>
+    {/* Tambahkan detail lain dari `record` di sini */}
+  </div>
+);
+
 // setting table columns
 const columns = [
   {
@@ -61,6 +71,7 @@ const columns = [
     dataIndex: 'code',
     key: 'code',
     width: 100,
+    responsive: ['md'],
   },
   {
     title: 'Name',
@@ -72,21 +83,21 @@ const columns = [
     title: 'Base Unit',
     dataIndex: 'base_unit',
     key: 'base_unit',
-    responsive: ['lg'],
+    responsive: ['md'],
     render: (base_unit) => base_unit ?? '-',
   },
   {
     title: 'Unit Cost',
     dataIndex: 'unit_cost',
     key: 'unit_cost',
-    responsive: ['lg'],
+    responsive: ['md'],
     render: (unit_cost) => unit_cost ?? '-',
   },
   {
     title: 'Selling Price',
     dataIndex: 'selling_price',
     key: 'selling_price',
-    responsive: ['lg'],
+    responsive: ['md'],
     render: (selling_price) => selling_price ?? '-',
   },
   {
@@ -95,6 +106,7 @@ const columns = [
     key: 'is_active',
     width: 100,
     justify: 'center',
+    responsive: ['md'],
     render: (_, record) => {
       const status = record.is_active ? 'active' : 'inactive';
       return renderTags(_, { tags: [status] });
@@ -318,6 +330,10 @@ const Products = () => {
               total: initialData?.count ?? 0,
               position: ['bottomLeft'],
               size: 'default',
+            }}
+            expandable={{
+              expandedRowRender,
+              rowExpandable: (_) => true,
             }}
           />
         </Space>

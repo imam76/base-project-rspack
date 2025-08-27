@@ -54,6 +54,16 @@ const DEFAULT_FILTERS = {
   page: DEFAULT_PAGE,
 };
 
+// mobile view
+const expandedRowRender = (record) => (
+  <div style={{ padding: '8px', borderTop: '1px solid #f0f0f0' }}>
+    <p>code: {record.code}</p>
+    <p>name: {record.name}</p>
+    <p>selling price: {record.selling_price}</p>
+    {/* Tambahkan detail lain dari `record` di sini */}
+  </div>
+);
+
 // setting table columns
 const columns = [
   {
@@ -72,14 +82,14 @@ const columns = [
     title: 'Email',
     dataIndex: 'email',
     key: 'email',
-    responsive: ['lg'],
+    responsive: ['md'],
     render: (email) => email ?? '-',
   },
   {
     title: 'Position',
     dataIndex: 'position',
     key: 'position',
-    responsive: ['lg'],
+    responsive: ['md'],
     render: (position) => position ?? '-',
   },
   {
@@ -87,7 +97,7 @@ const columns = [
     dataIndex: 'contact_type',
     key: 'contact_type',
     width: 120,
-    responsive: ['lg'],
+    responsive: ['md'],
     render: (type) => {
       const typeColors = {
         customer: 'blue',
@@ -327,6 +337,10 @@ const Contacts = () => {
               total: initialData?.count ?? 0,
               position: ['bottomLeft'],
               size: 'default',
+            }}
+            expandable={{
+              expandedRowRender,
+              rowExpandable: (_) => true,
             }}
           />
         </Space>

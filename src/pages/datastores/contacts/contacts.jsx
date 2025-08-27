@@ -82,8 +82,8 @@ const columns = [
   },
   {
     title: 'Type',
-    dataIndex: 'type',
-    key: 'type',
+    dataIndex: 'contact_type',
+    key: 'contact_type',
     width: 120,
     render: (type) => {
       const typeColors = {

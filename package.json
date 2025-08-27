@@ -2,11 +2,6 @@
   "name": "zo-rspack",
   "private": true,
   "version": "1.0.0",
-  "packageManager": "pnpm@10.13.1",
-  "engines": {
-    "node": "22.x",
-    "pnpm": "10.x"
-  },
   "scripts": {
     "build": "vite build",
     "dev": "vite dev",

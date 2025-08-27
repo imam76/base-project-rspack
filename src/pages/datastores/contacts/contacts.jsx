@@ -59,7 +59,7 @@ const expandedRowRender = (record) => (
   <div style={{ padding: '8px', borderTop: '1px solid #f0f0f0' }}>
     <p>code: {record.code}</p>
     <p>name: {record.name}</p>
-    <p>selling price: {record.selling_price}</p>
+    <p>email: {record.email}</p>
     {/* Tambahkan detail lain dari `record` di sini */}
   </div>
 );

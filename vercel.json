@@ -1,4 +1,6 @@
 {
+  "buildCommand": "corepack enable && pnpm install && pnpm build",
+  "installCommand": "corepack enable && pnpm install",
   "rewrites": [
     {
       "source": "/api/v1/:path*",

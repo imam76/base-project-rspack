@@ -1,4 +1,10 @@
 {
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install",
+  "engines": {
+    "node": "22.11.0",
+    "pnpm": "9.12.0"
+  },
   "rewrites": [
     {
       "source": "/api/v1/:path*",

@@ -148,7 +148,7 @@ export default () => {
                 validateStatus={errors.email && 'error'}
                 extra={
                   errors?.email?.message && (
-                    <Text className="text-xs text-red-500">
+                    <Text className="text-xs" type="danger">
                       {errors.email.message}
                     </Text>
                   )
@@ -170,7 +170,7 @@ export default () => {
                 validateStatus={errors.password && 'error'}
                 extra={
                   errors?.password?.message && (
-                    <Text className="text-xs text-red-500">
+                    <Text className="text-xs" type="danger">
                       {errors.password.message}
                     </Text>
                   )

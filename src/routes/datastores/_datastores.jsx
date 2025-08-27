@@ -1,5 +1,6 @@
 import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import contacts from './_contacts';
+import products from './_products';
 
 /** @type {import('react-router').RouteObject[]} */
 const routes = [
@@ -13,6 +14,7 @@ const routes = [
         ),
       },
       ...contacts,
+      ...products,
       {
         path: '*',
         element: ReactLazyWithSuspense(() => import('@/pages/notfound')),

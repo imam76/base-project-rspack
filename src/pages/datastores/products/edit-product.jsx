@@ -3,7 +3,7 @@ import { Breadcrumb, Flex } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
-import { ContactFormSchema } from '@/schema';
+import { ProductFormSchema } from '@/schema';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { App } from 'antd';
@@ -11,33 +11,30 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import Forms from './forms';
 
-const DetailContact = () => {
+const EditProduct = () => {
   const { notification } = App.useApp();
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const endpoints =
-    id && typeof id === 'string' && id.trim() !== ''
-      ? `/api/v1/contacts/${id}`
-      : '/api/v1/contacts';
+  const endpoints = `/api/v1/products/${id}`;
 
   const { initialData, isLoading, isSubmitting, submit } = useDataQuery({
-    queryKey: ['contacts'],
+    queryKey: ['products', endpoints],
     getUrl: endpoints,
-    method: 'PUT', // Use PUT for updating existing contact
+    method: 'PUT', // Use PUT for updating existing product
     submitUrl: endpoints,
     onSuccess: () => {
       notification.success({
-        message: 'Contact Updated',
-        description: 'Contact has been successfully updated.',
+        message: 'Product Updated',
+        description: 'Product has been successfully updated.',
         duration: 3,
       });
-      navigate('/datastores/contacts');
+      navigate('/datastores/products');
     },
     onError: (err) => {
       notification.success({
-        message: 'Contact Update Failed',
-        description: err.message || 'Failed to update contact.',
+        message: 'Product Update Failed',
+        description: err.message || 'Failed to update product.',
         duration: 3,
       });
     },
@@ -51,7 +48,7 @@ const DetailContact = () => {
     control,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(ContactFormSchema),
+    resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       code: '',
       name: '',
@@ -64,13 +61,24 @@ const DetailContact = () => {
 
   useEffect(() => {
     if (initialData) {
+      console.info('Initial data loaded:', initialData);
+      const {
+        code,
+        name,
+        base_unit,
+        sku,
+        unit_cost,
+        selling_price,
+        description,
+      } = initialData?.results || {};
       reset({
-        code: initialData.code || '',
-        name: initialData.name || '',
-        email: initialData.email || '',
-        position: initialData.position || '',
-        contact_type: initialData.type || '',
-        address: initialData.address || '',
+        code: code || '',
+        name: name || '',
+        base_unit: base_unit || '',
+        sku: sku || '',
+        unit_cost: unit_cost || '',
+        selling_price: selling_price || '',
+        description: description || '',
       });
     }
   }, [initialData, reset]);
@@ -97,27 +105,26 @@ const DetailContact = () => {
               onClick: () => navigate('/datastores'),
             },
             {
-              title: 'Contacts',
-              onClick: () => navigate('/datastores/contacts'),
+              title: 'Products',
+              onClick: () => navigate('/datastores/products'),
             },
             {
-              title: 'Detail Contact',
+              title: 'Edit Products',
             },
           ]}
         />
       </Flex>
 
       <Forms
-        title={'Detail Contact'}
+        title="Edit Product"
         control={control}
         isLoading={isLoading}
         handleSubmit={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
         errors={errors}
-        isDetail={true}
       />
     </Flex>
   );
 };
 
-export default DetailContact;
+export default EditProduct;

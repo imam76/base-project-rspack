@@ -5,23 +5,23 @@ import { redirect } from 'react-router';
 /** @type {import('react-router').RouteObject[]} */
 const routes = [
   {
-    path: 'contacts',
+    path: 'products',
     children: [
       {
         index: true,
-        loader: () => redirect('/datastores/contacts/list'),
+        loader: () => redirect('/datastores/products/list'),
       },
       {
         path: 'list',
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastores/contacts/contacts'),
+          async () => await import('@/pages/datastores/products/products'),
         ),
         children: [
           {
             path: 'filter',
             element: ReactLazyWithSuspense(
               async () =>
-                await import('@/pages/datastores/contacts/filter-contact'),
+                await import('@/pages/datastores/products/filter-product'),
             ),
           },
         ],
@@ -30,20 +30,20 @@ const routes = [
         path: 'create',
         element: ReactLazyWithSuspense(
           async () =>
-            await import('@/pages/datastores/contacts/create-contact'),
+            await import('@/pages/datastores/products/create-product'),
         ),
       },
       {
         path: 'edit/:id',
         element: ReactLazyWithSuspense(
-          async () => await import('@/pages/datastores/contacts/edit-contact'),
+          async () => await import('@/pages/datastores/products/edit-product'),
         ),
       },
       {
         path: 'detail/:id',
         element: ReactLazyWithSuspense(
           async () =>
-            await import('@/pages/datastores/contacts/detail-contact'),
+            await import('@/pages/datastores/products/detail-product'),
         ),
       },
       {
@@ -51,11 +51,11 @@ const routes = [
         action: async ({ params }) => {
           const { id } = params;
           try {
-            await Api().delete(`/api/v1/contacts/${id}`);
-            return redirect('/datastores/contacts/list');
+            await Api().delete(`/api/v1/products/${id}`);
+            return redirect('/datastores/products/list');
           } catch (error) {
-            console.error('Error deleting contact:', error);
-            return redirect('/datastores/contacts/list');
+            console.error('Error deleting product:', error);
+            return redirect('/datastores/products/list');
           }
         },
       },

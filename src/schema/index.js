@@ -32,3 +32,16 @@ export const RegisterFormSchema = z.object({
     .min(1, 'Password is required')
     .min(8, 'Password must be at least 8 characters long'),
 });
+
+// Product form schema
+export const ProductFormSchema = z
+  .object({
+    code: z.string().min(1, 'Code is required'),
+    name: z.string().min(1, 'Name is required'),
+    base_unit: z.string().min(1, 'Base unit is required'),
+    sku: z.string().min(1, 'SKU is required'),
+    description: z.string().min(1, 'Description is required'),
+    selling_price: z.number().min(0, 'Selling price must be positive'),
+    unit_cost: z.number().min(0, 'Unit cost must be positive'),
+  })
+  .passthrough();

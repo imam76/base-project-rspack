@@ -1,4 +1,5 @@
 # Rspack project
+ver 0.0.2-44423
 
 ## Setup
 

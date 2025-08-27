@@ -28,7 +28,15 @@ const Forms = ({
 
   return (
     <Card>
+      <Flex justify="space-between">
+        <Title level={3}>{title}</Title>
+        <Button variant="outlined" color="primary">
+          <LucideDownload size={16} />
+          Import From CSV
+        </Button>
+      </Flex>
       <ProForm
+        grid
         title={title}
         disabled={isLoading || isSubmitting}
         readonly={isDetail}
@@ -48,13 +56,6 @@ const Forms = ({
           },
         }}
       >
-        <Flex justify="space-between">
-          <Title level={3}>{title}</Title>
-          <Button variant="outlined" color="primary">
-            <LucideDownload size={16} />
-            Import From CSV
-          </Button>
-        </Flex>
         <ProForm.Group>
           <Controller
             name="name"

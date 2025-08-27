@@ -65,12 +65,12 @@ const DetailContact = () => {
   useEffect(() => {
     if (initialData) {
       reset({
-        code: initialData.code || '',
-        name: initialData.name || '',
-        email: initialData.email || '',
-        position: initialData.position || '',
-        contact_type: initialData.type || '',
-        address: initialData.address || '',
+        code: initialData?.results?.code || '',
+        name: initialData?.results?.name || '',
+        email: initialData?.results?.email || '',
+        position: initialData?.results?.position || '',
+        contact_type: initialData?.results?.type || '',
+        address: initialData?.results?.address || '',
       });
     }
   }, [initialData, reset]);

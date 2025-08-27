@@ -56,18 +56,19 @@ const Forms = ({
         </Flex>
         <ProForm.Group>
           <Controller
-            name="code"
+            name="name"
             control={control}
             render={(form) => (
               <div>
                 <ProFormText
                   {...form.field}
-                  label="Code"
+                  label="Name"
                   placeholder={''}
-                  validateStatus={errors.code && 'error'}
+                  colProps={{ xs: 24, sm: 24, md: 12, lg: 8, xl: 6 }}
+                  validateStatus={errors.name && 'error'}
                   extra={
                     <Text style={{ fontSize: 12 }} type="danger">
-                      {errors?.code?.message}
+                      {errors?.name?.message}
                     </Text>
                   }
                   labelCol={{
@@ -82,19 +83,20 @@ const Forms = ({
             )}
           />
 
-          <Controller
-            name="name"
+           <Controller
+            name="code"
             control={control}
             render={(form) => (
               <div>
                 <ProFormText
                   {...form.field}
-                  label="Name"
+                  label="Code"
                   placeholder={''}
-                  validateStatus={errors.name && 'error'}
+                  colProps={{ xs: 24, sm: 24, md: 12, lg: 8, xl: 6 }}
+                  validateStatus={errors.code && 'error'}
                   extra={
                     <Text style={{ fontSize: 12 }} type="danger">
-                      {errors?.name?.message}
+                      {errors?.code?.message}
                     </Text>
                   }
                   labelCol={{
@@ -118,6 +120,7 @@ const Forms = ({
                   {...form.field}
                   label="Email"
                   placeholder={''}
+                  colProps={{ xs: 24, sm: 24, md: 12, lg: 8, xl: 6 }}
                   validateStatus={errors.email && 'error'}
                   extra={
                     <Text style={{ fontSize: 12 }} type="danger">
@@ -145,6 +148,7 @@ const Forms = ({
                   {...form.field}
                   label="Position"
                   placeholder={''}
+                  colProps={{ xs: 24, sm: 24, md: 12, lg: 8, xl: 6 }}
                   validateStatus={errors.position && 'error'}
                   extra={
                     <Text style={{ fontSize: 12 }} type="danger">
@@ -172,6 +176,7 @@ const Forms = ({
                   {...form.field}
                   label="Contact Type"
                   placeholder="Select contact type"
+                  colProps={{ xs: 24, sm: 24, md: 12, lg: 8, xl: 6 }}
                   validateStatus={errors.contact_type && 'error'}
                   extra={
                     <Text style={{ fontSize: 12 }} type="danger">

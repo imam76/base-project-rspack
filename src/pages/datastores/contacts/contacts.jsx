@@ -72,12 +72,14 @@ const columns = [
     title: 'Email',
     dataIndex: 'email',
     key: 'email',
+    responsive: ['lg'],
     render: (email) => email ?? '-',
   },
   {
     title: 'Position',
     dataIndex: 'position',
     key: 'position',
+    responsive: ['lg'],
     render: (position) => position ?? '-',
   },
   {
@@ -85,6 +87,7 @@ const columns = [
     dataIndex: 'contact_type',
     key: 'contact_type',
     width: 120,
+    responsive: ['lg'],
     render: (type) => {
       const typeColors = {
         customer: 'blue',

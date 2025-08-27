@@ -72,18 +72,21 @@ const columns = [
     title: 'Base Unit',
     dataIndex: 'base_unit',
     key: 'base_unit',
+    responsive: ['lg'],
     render: (base_unit) => base_unit ?? '-',
   },
   {
     title: 'Unit Cost',
     dataIndex: 'unit_cost',
     key: 'unit_cost',
+    responsive: ['lg'],
     render: (unit_cost) => unit_cost ?? '-',
   },
   {
     title: 'Selling Price',
     dataIndex: 'selling_price',
     key: 'selling_price',
+    responsive: ['lg'],
     render: (selling_price) => selling_price ?? '-',
   },
   {

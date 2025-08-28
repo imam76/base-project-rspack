@@ -51,11 +51,10 @@ const routes = [
         action: async ({ params }) => {
           const { id } = params;
           try {
-            await Api().delete(`/api/v1/contacts/${id}`);
-            return redirect('/datastores/contacts/list');
+            const res = await Api().delete(`/api/v1/contacts/${id}`);
+            return res;
           } catch (error) {
             console.error('Error deleting contact:', error);
-            return redirect('/datastores/contacts/list');
           }
         },
       },

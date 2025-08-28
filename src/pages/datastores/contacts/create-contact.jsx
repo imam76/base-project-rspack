@@ -72,7 +72,6 @@ const CreateContact = () => {
   });
 
   const onSubmit = (data) => {
-    console.info('Submitting data =>', data);
     submit(data);
   };
 

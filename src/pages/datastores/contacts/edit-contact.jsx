@@ -62,7 +62,6 @@ const EditContact = () => {
 
   useEffect(() => {
     if (initialData) {
-      console.info('Initial data loaded:', initialData);
       const { code, name, email, position, contact_type, address } =
         initialData?.results || {};
       reset({

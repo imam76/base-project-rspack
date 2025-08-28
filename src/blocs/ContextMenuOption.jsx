@@ -11,7 +11,7 @@ const { Text } = Typography;
 const ContextMenuOption = ({ children, editPath, deletePath, detailPath }) => {
   // const navigateToChild = navigateToChildRoute();
   const navigate = useNavigate();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher({ key: 'action-delete' });
   const { modal } = App.useApp();
 
   const handleDelete = (deletePath) => {

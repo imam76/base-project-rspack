@@ -61,7 +61,6 @@ const EditProduct = () => {
 
   useEffect(() => {
     if (initialData) {
-      console.info('Initial data loaded:', initialData);
       const {
         code,
         name,

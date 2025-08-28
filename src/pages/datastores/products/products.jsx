@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Flex,
+  Grid,
   Input,
   Space,
   Table,
@@ -17,7 +18,7 @@ import {
 } from 'lucide-react';
 import moment from 'moment';
 import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useFetcher, useNavigate } from 'react-router';
 
 import ContextMenuOption from '@/blocs/ContextMenuOption';
 import { useDataQuery } from '@/utils/hooks/useDataQuery';
@@ -25,6 +26,9 @@ import { useDebouncedSearchParams } from '@/utils/hooks/useDebouncedSearchParams
 import useExportCSV from '@/utils/hooks/useExportCSV';
 import renderTags from '@/utils/renderTags';
 import { Trash2 } from 'lucide-react';
+import { useEffect } from 'react';
+
+const { useBreakpoint } = Grid;
 
 // styles variables
 const useStyle = createStyles(({ css, token }) => {
@@ -183,6 +187,8 @@ const renderFilterButton = (hasActiveFilters, clearAllParams, navigate) => {
 const Products = () => {
   const navigate = useNavigate();
   const { styles } = useStyle();
+  const screens = useBreakpoint();
+  const fetcher = useFetcher({ key: 'action-delete' });
   const [selectedRow, setSelectedRow] = useState([]);
   const { searchParam, updateParam, clearAllParams } =
     useDebouncedSearchParams(600);
@@ -213,6 +219,12 @@ const Products = () => {
     getUrl: ENDPOINTS,
     filters: currentFilters,
   });
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data) {
+      refetch();
+    }
+  }, [refetch, fetcher.state, fetcher.data]);
 
   const handleSearch = (e) => {
     updateParam({ search: e.target.value, page: 1 });
@@ -302,40 +314,49 @@ const Products = () => {
             </Space>
           </Flex>
 
-          <Table
-            size="middle"
-            loading={isLoading}
-            className={`${styles.customTable} striped-table`}
-            // scroll={{ y: 55 * 10 }}
-            dataSource={initialData?.results?.list ?? []}
-            rowKey={'id'}
-            rowSelection={{
-              preserveSelectedRowKeys: true,
-              type: 'checkbox',
-              onChange: handleSelectRow,
-              checkStrictly: true,
-            }}
-            columns={columns}
-            title={() =>
-              TitleTableRender({ selectedLength: selectedRow.length, navigate })
-            }
-            pagination={{
-              responsive: true,
-              current: currentPage,
-              onChange: onChange,
-              showSizeChanger: true,
-              onShowSizeChange: onShowSizeChange,
-              defaultPageSize: DEFAULT_PER_PAGE,
-              pageSize: limit,
-              total: initialData?.count ?? 0,
-              position: ['bottomLeft'],
-              size: 'default',
-            }}
-            expandable={{
-              expandedRowRender,
-              rowExpandable: (_) => true,
-            }}
-          />
+          {(screens.xs || screens.sm) && !screens.lg ? (
+            // render mobile
+            <p>list</p>
+          ) : (
+            // render desktop
+            <Table
+              size="middle"
+              loading={isLoading}
+              className={`${styles.customTable} striped-table`}
+              // scroll={{ y: 55 * 10 }}
+              dataSource={initialData?.results?.list ?? []}
+              rowKey={'id'}
+              rowSelection={{
+                preserveSelectedRowKeys: true,
+                type: 'checkbox',
+                onChange: handleSelectRow,
+                checkStrictly: true,
+              }}
+              columns={columns}
+              title={() =>
+                TitleTableRender({
+                  selectedLength: selectedRow.length,
+                  navigate,
+                })
+              }
+              pagination={{
+                responsive: true,
+                current: currentPage,
+                onChange: onChange,
+                showSizeChanger: true,
+                onShowSizeChange: onShowSizeChange,
+                defaultPageSize: DEFAULT_PER_PAGE,
+                pageSize: limit,
+                total: initialData?.count ?? 0,
+                position: ['bottomLeft'],
+                size: 'default',
+              }}
+              expandable={{
+                expandedRowRender,
+                rowExpandable: (_) => true,
+              }}
+            />
+          )}
         </Space>
       </Card>
       <Outlet />

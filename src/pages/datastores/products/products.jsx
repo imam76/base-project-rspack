@@ -255,7 +255,7 @@ const Products = () => {
           items={[
             {
               title: 'Datastore',
-              onClick: () => navigate('/datastore'),
+              onClick: () => navigate('/datastores'),
             },
             {
               title: 'Products',

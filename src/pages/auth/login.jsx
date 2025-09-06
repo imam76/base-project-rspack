@@ -14,12 +14,13 @@ import {
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Card, Space, Typography } from 'antd';
+import { Card, Grid, Typography } from 'antd';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 const { Text } = Typography;
+const { useBreakpoint } = Grid;
 
 // Constants
 const DEFAULT_CREDENTIALS = {
@@ -42,6 +43,7 @@ export default () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const screens = useBreakpoint();
 
   // Zustand store
   const { login, isAuthenticated, isLoading } = useAuthStore();
@@ -118,7 +120,7 @@ export default () => {
 
   return (
     <div style={CONTAINER_STYLES}>
-      <Card>
+      <Card styles={screens.xs ? { body: { height: '100vh' } } : {}}>
         <LoginForm
           title={ENV.VITE_APP_NAME}
           subTitle="Sign in to your account"

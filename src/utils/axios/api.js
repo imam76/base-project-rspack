@@ -69,13 +69,17 @@ const Api = () => {
       // Get fresh auth state for each request
       const authState = useAuthStore.getState();
 
-      // Set headers dynamically
+      // Set Authorization header if user is authenticated and has token
       if (authState?.user?.token) {
         config.headers.Authorization = `Bearer ${authState.user.token}`;
       }
 
+      // Set Workspace ID header if current workspace is available
       if (authState?.currentWorkspace?.id) {
         config.headers['X-Workspace-ID'] = authState.currentWorkspace.id;
+      } else if (authState?.lastWorkspaceId) {
+        // Fallback to lastWorkspaceId if currentWorkspace is not set
+        config.headers['X-Workspace-ID'] = authState.lastWorkspaceId;
       }
 
       return config;
@@ -94,6 +98,7 @@ const Api = () => {
       if (response) {
         const { status, data } = response;
 
+        // Handle unauthorized access - clear auth state
         if (status === 401) {
           handleUnauthorized();
         }
@@ -101,11 +106,13 @@ const Api = () => {
         const { message, description } = getErrorContent(status, data);
         showError(message, description);
       } else if (error.request) {
+        // Network error
         showError(
           'Network Error',
           'Unable to connect to the server. Please check your internet connection.',
         );
       } else {
+        // Request setup error
         showError(
           'Request Error',
           error.message ||

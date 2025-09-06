@@ -12,6 +12,7 @@ import {
   Avatar,
   Button,
   Dropdown,
+  Grid,
   Layout,
   Menu,
   Space,
@@ -30,11 +31,17 @@ import { Outlet, useNavigate } from 'react-router';
 
 const { Content, Sider, Header } = Layout;
 const { Text } = Typography;
+const { useBreakpoint } = Grid;
 
 const AppLayout = () => {
   const navigate = useNavigate();
   const { user, logout, getCurrentWorkspace, switchWorkspace } = useAuthStore();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Menggunakan Ant Design's useBreakpoint hook
+  const screens = useBreakpoint();
+  const isMobile = !screens.md; // md breakpoint = 768px
 
   const currentWorkspace = getCurrentWorkspace();
 
@@ -49,42 +56,46 @@ const AppLayout = () => {
     {
       key: '/dashboard',
       icon: <LayoutDashboard size={16} />,
-      label: 'Dashboard',
+      label: isMobile && !mobileMenuOpen ? '' : 'Dashboard',
     },
     {
       key: '/datastores',
       icon: <Database size={16} />,
-      label: 'Datastores',
+      label: isMobile && !mobileMenuOpen ? '' : 'Datastores',
     },
     {
       key: '/workspaces',
       icon: <SwapOutlined />,
-      label: 'Workspaces',
+      label: isMobile && !mobileMenuOpen ? '' : 'Workspaces',
     },
     {
       key: '/trasactions',
       icon: <CreditCard size={16} />,
-      label: 'Transactions',
+      label: isMobile && !mobileMenuOpen ? '' : 'Transactions',
     },
     {
       key: '/reports',
       icon: <PieChartOutlined />,
-      label: 'Reports',
+      label: isMobile && !mobileMenuOpen ? '' : 'Reports',
     },
     {
       key: '/accounts',
       icon: <AccountBookOutlined />,
-      label: 'Accounts',
+      label: isMobile && !mobileMenuOpen ? '' : 'Accounts',
     },
     {
       key: '/ai',
       icon: <BrainIcon size={16} />,
-      label: 'Grooming Ai',
+      label: isMobile && !mobileMenuOpen ? '' : 'Grooming Ai',
     },
   ];
 
   const handleClick = ({ key }) => {
     navigate(key);
+    // Close mobile menu after navigation
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -170,16 +181,47 @@ const AppLayout = () => {
 
   return (
     <Layout hasSider style={{ minHeight: '100vh' }}>
+      {/* Mobile Overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999,
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setMobileMenuOpen(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close menu"
+        />
+      )}
+
       <Sider
         collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
+        collapsed={isMobile ? !mobileMenuOpen : collapsed}
+        onCollapse={(value) => {
+          if (isMobile) {
+            setMobileMenuOpen(!mobileMenuOpen);
+          } else {
+            setCollapsed(value);
+          }
+        }}
         breakpoint="lg"
-        collapsedWidth={0}
+        collapsedWidth={isMobile ? 0 : 0}
+        width={isMobile ? '80%' : 200}
         zeroWidthTriggerStyle={{
           top: 16,
-          left: collapsed ? 0 : 200,
-          zIndex: 1000,
+          left: 0,
+          zIndex: 1001,
           width: 30,
           height: 20,
         }}
@@ -190,7 +232,8 @@ const AppLayout = () => {
           left: 0,
           top: 0,
           bottom: 0,
-          zIndex: 1,
+          zIndex: 1000,
+          maxWidth: isMobile ? '300px' : '200px',
         }}
       >
         <div
@@ -198,10 +241,11 @@ const AppLayout = () => {
             height: 64,
             display: 'flex',
             alignItems: 'center',
-            paddingLeft: 24,
+            justifyContent: isMobile ? 'center' : 'flex-start',
+            paddingLeft: isMobile ? 0 : 24,
           }}
         >
-          {!collapsed && 'Accounting App'}
+          {isMobile ? 'Accounting App' : !collapsed && 'Accounting App'}
         </div>
         <Menu
           onClick={handleClick}
@@ -211,34 +255,46 @@ const AppLayout = () => {
         />
       </Sider>
 
-      <Layout style={{ marginLeft: collapsed ? 0 : 200 }}>
+      <Layout style={{ marginLeft: isMobile ? 0 : collapsed ? 0 : 200 }}>
         <Header
           style={{
             background: '#fff',
-            padding: '0 24px',
+            padding: isMobile ? '0 12px' : '0 24px',
             display: 'flex',
             justifyContent: 'flex-end',
             alignItems: 'center',
             borderBottom: '1px solid #f0f0f0',
           }}
         >
-          <Space size="large">
+          <Space size={isMobile ? 'small' : 'large'}>
             {/* Workspace Selector */}
-            <Space>
-              <Typography.Text type="secondary">Workspace:</Typography.Text>
+            {isMobile ? (
               <Dropdown
                 menu={{ items: workspaceMenuItems }}
                 placement="bottomLeft"
                 trigger={['click']}
               >
-                <Button type="text" style={{ fontWeight: 500 }}>
-                  <Space>
-                    {currentWorkspace?.name || 'Select Workspace'}
-                    <SwapOutlined />
-                  </Space>
+                <Button type="text" size="small">
+                  <SwapOutlined />
                 </Button>
               </Dropdown>
-            </Space>
+            ) : (
+              <Space>
+                <Typography.Text type="secondary">Workspace:</Typography.Text>
+                <Dropdown
+                  menu={{ items: workspaceMenuItems }}
+                  placement="bottomLeft"
+                  trigger={['click']}
+                >
+                  <Button type="text" style={{ fontWeight: 500 }}>
+                    <Space>
+                      {currentWorkspace?.name || 'Select Workspace'}
+                      <SwapOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
+              </Space>
+            )}
 
             {/* User Menu */}
             <Dropdown
@@ -246,14 +302,22 @@ const AppLayout = () => {
               placement="bottomRight"
               trigger={['click']}
             >
-              <Space style={{ cursor: 'pointer' }}>
-                <Avatar icon={<UserOutlined />} />
-                <Text>
-                  {user?.first_name && user?.last_name
-                    ? `${user.first_name} ${user.last_name}`
-                    : user?.username || user?.email || 'User'}
-                </Text>
-              </Space>
+              {isMobile ? (
+                <Avatar
+                  icon={<UserOutlined />}
+                  size="small"
+                  style={{ cursor: 'pointer' }}
+                />
+              ) : (
+                <Space style={{ cursor: 'pointer' }}>
+                  <Avatar icon={<UserOutlined />} />
+                  <Text>
+                    {user?.first_name && user?.last_name
+                      ? `${user.first_name} ${user.last_name}`
+                      : user?.username || user?.email || 'User'}
+                  </Text>
+                </Space>
+              )}
             </Dropdown>
           </Space>
         </Header>

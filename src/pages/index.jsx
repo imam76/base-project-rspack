@@ -1,11 +1,23 @@
 import { useAuthStore } from '@/stores';
+import { useDataQuery } from '@/utils/hooks/useDataQuery';
 import {
   AccountBookOutlined,
+  CheckOutlined,
   LogoutOutlined,
   PieChartOutlined,
+  SwapOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Dropdown, Layout, Menu, Space, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  Layout,
+  Menu,
+  Space,
+  Typography,
+  message,
+} from 'antd';
 import { BrainIcon } from 'lucide-react';
 import {
   ChevronLeft,
@@ -21,8 +33,17 @@ const { Text } = Typography;
 
 const AppLayout = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { user, logout, getCurrentWorkspace, switchWorkspace } = useAuthStore();
   const [collapsed, setCollapsed] = useState(false);
+
+  const currentWorkspace = getCurrentWorkspace();
+
+  // Fetch available workspaces
+  const { initialData: workspacesData, refetch: refetchWorkspaces } =
+    useDataQuery({
+      queryKey: ['workspaces'],
+      getUrl: '/api/v1/workspaces',
+    });
 
   const menuItems = [
     {
@@ -34,6 +55,11 @@ const AppLayout = () => {
       key: '/datastores',
       icon: <Database size={16} />,
       label: 'Datastores',
+    },
+    {
+      key: '/workspaces',
+      icon: <SwapOutlined />,
+      label: 'Workspaces',
     },
     {
       key: '/trasactions',
@@ -65,6 +91,65 @@ const AppLayout = () => {
     await logout();
     navigate('/auth/login');
   };
+
+  const handleSwitchWorkspace = (workspace) => {
+    switchWorkspace(workspace);
+    message.success(`Switched to workspace: ${workspace.name}`);
+    refetchWorkspaces(); // Refresh workspace data
+  };
+
+  // Get available workspaces and sort them
+  const availableWorkspaces = (() => {
+    const allWorkspaces = [];
+
+    if (workspacesData?.results && Array.isArray(workspacesData.results)) {
+      allWorkspaces.push(...workspacesData.results);
+    }
+
+    // Sort workspaces: current workspace first, then others
+    return allWorkspaces.sort((a, b) => {
+      const aIsCurrent = currentWorkspace?.id === a.id;
+      const bIsCurrent = currentWorkspace?.id === b.id;
+
+      if (aIsCurrent && !bIsCurrent) return -1;
+      if (!aIsCurrent && bIsCurrent) return 1;
+
+      return (a.name || '').localeCompare(b.name || '');
+    });
+  })();
+
+  // Create workspace dropdown menu items
+  const workspaceMenuItems = [
+    ...availableWorkspaces.map((workspace) => {
+      const isCurrentWorkspace = currentWorkspace?.id === workspace.id;
+      return {
+        key: `workspace-${workspace.id}`,
+        label: (
+          <Space>
+            {workspace.name || `Workspace ${workspace.id}`}
+            {isCurrentWorkspace && (
+              <CheckOutlined style={{ color: '#52c41a' }} />
+            )}
+          </Space>
+        ),
+        onClick: () => {
+          if (!isCurrentWorkspace) {
+            handleSwitchWorkspace(workspace);
+          }
+        },
+        disabled: isCurrentWorkspace,
+      };
+    }),
+    {
+      type: 'divider',
+    },
+    {
+      key: 'manage-workspaces',
+      label: 'Manage Workspaces',
+      icon: <SwapOutlined />,
+      onClick: () => navigate('/workspaces'),
+    },
+  ];
 
   const userMenuItems = [
     {
@@ -137,20 +222,40 @@ const AppLayout = () => {
             borderBottom: '1px solid #f0f0f0',
           }}
         >
-          <Dropdown
-            menu={{ items: userMenuItems }}
-            placement="bottomRight"
-            trigger={['click']}
-          >
-            <Space style={{ cursor: 'pointer' }}>
-              <Avatar icon={<UserOutlined />} />
-              <Text>
-                {user?.first_name && user?.last_name
-                  ? `${user.first_name} ${user.last_name}`
-                  : user?.username || user?.email || 'User'}
-              </Text>
+          <Space size="large">
+            {/* Workspace Selector */}
+            <Space>
+              <Typography.Text type="secondary">Workspace:</Typography.Text>
+              <Dropdown
+                menu={{ items: workspaceMenuItems }}
+                placement="bottomLeft"
+                trigger={['click']}
+              >
+                <Button type="text" style={{ fontWeight: 500 }}>
+                  <Space>
+                    {currentWorkspace?.name || 'Select Workspace'}
+                    <SwapOutlined />
+                  </Space>
+                </Button>
+              </Dropdown>
             </Space>
-          </Dropdown>
+
+            {/* User Menu */}
+            <Dropdown
+              menu={{ items: userMenuItems }}
+              placement="bottomRight"
+              trigger={['click']}
+            >
+              <Space style={{ cursor: 'pointer' }}>
+                <Avatar icon={<UserOutlined />} />
+                <Text>
+                  {user?.first_name && user?.last_name
+                    ? `${user.first_name} ${user.last_name}`
+                    : user?.username || user?.email || 'User'}
+                </Text>
+              </Space>
+            </Dropdown>
+          </Space>
         </Header>
         <Content
           style={{

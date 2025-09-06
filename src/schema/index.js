@@ -45,3 +45,12 @@ export const ProductFormSchema = z
     unit_cost: z.number().min(0, 'Unit cost must be positive'),
   })
   .passthrough();
+
+// Workspace form schema
+export const WorkspaceFormSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .min(3, 'Name must be at least 3 characters'),
+  description: z.string().optional(),
+});

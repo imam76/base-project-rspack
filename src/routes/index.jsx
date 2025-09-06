@@ -4,6 +4,7 @@ import ReactLazyWithSuspense from '@/utils/reactLazyWithSuspense';
 import { createBrowserRouter } from 'react-router';
 import datastores from './datastores/_datastores';
 import reports from './reports/_reports';
+import workspaces from './workspaces';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       },
       ...datastores,
       ...reports,
+      ...workspaces,
     ],
   },
   {

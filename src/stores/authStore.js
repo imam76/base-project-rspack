@@ -4,21 +4,18 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 // Helper functions
-const findWorkspaceById = (workspaces, id) => {
-  return workspaces.find((w) => w.id === id) || null;
-};
-
-const selectDefaultWorkspace = (availableWorkspaces, lastWorkspaceId) => {
-  // Priority: lastWorkspaceId → first workspace
-  if (lastWorkspaceId) {
-    const lastWorkspace = findWorkspaceById(
-      availableWorkspaces,
-      lastWorkspaceId,
-    );
-    if (lastWorkspace) return lastWorkspace;
+const selectDefaultWorkspace = (userWorkspace, lastWorkspaceId) => {
+  // Priority: if lastWorkspaceId matches user's workspace, use it
+  if (
+    lastWorkspaceId &&
+    userWorkspace &&
+    userWorkspace.id === lastWorkspaceId
+  ) {
+    return userWorkspace;
   }
 
-  return availableWorkspaces[0] || null;
+  // Otherwise, return user's workspace if available
+  return userWorkspace || null;
 };
 
 const buildUserData = (userData, workspaces, token) => ({
@@ -67,9 +64,9 @@ export const useAuthStore = create(
 
           // Workspace selection logic
           const { lastWorkspaceId } = get();
-          const availableWorkspaces = data.workspace || [];
+          const userWorkspace = data.workspace || null;
           const selectedWorkspace = selectDefaultWorkspace(
-            availableWorkspaces,
+            userWorkspace,
             lastWorkspaceId,
           );
 
@@ -179,7 +176,7 @@ export const useAuthStore = create(
           }
 
           // Workspace selection logic
-          const availableWorkspaces = data.workspace || [];
+          const availableWorkspaces = data.workspace || null;
           const selectedWorkspace = selectDefaultWorkspace(
             availableWorkspaces,
             lastWorkspaceId,
@@ -262,7 +259,8 @@ export const useAuthStore = create(
 
       getAvailableWorkspaces: () => {
         const { user } = get();
-        return user?.workspace || [];
+        // Return the user's workspace object (not an array)
+        return user?.workspace || null;
       },
     }),
     {
